@@ -21,29 +21,27 @@ const createTaskBodyForCompilingStylus = require('../gulp-task-creators/css-comp
 function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 	// logging
 	taskNameKeyPart,
-	basePathForShorteningPathsInLog,
+	basePathForShorteningPathsInLog, // optional
 
 	// sources
 	sourceBasePath,
-	buildingEntryGlobsRelativeToSoureRootFolder,
+	buildingEntryGlobsRelativeToBasePath,
 	watchingGlobs, // optional
 
 	// building
 	builtOutputBasePath,
-	builtOutputRootFolderName,
 	builtSingleFileBaseName,
 
-
 	// copying
-	shouldCopyBuiltFileToElsewhere = true,
-	copyingFilesOutputBasePath,
-	copyingFilesTaskOption = null,
+	shouldCopyBuiltFileToElsewhere = false,
+	copyingFilesOutputBasePath, // optional
+	copyingFilesTaskOption, // optional
 }) {
 	if (! watchingGlobs) {
 		watchingGlobs = joinPath(sourceBasePath, '**/*.styl');
 	}
 
-	const builtGlobsRelativeToBuildingOutputRootFolder = [
+	const builtGlobsRelativeToBuiltOutputBasePath = [
 		`${builtSingleFileBaseName}.css`,
 		`${builtSingleFileBaseName}.min.css`,
 	];
@@ -73,13 +71,12 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 
 		// sources
 		sourceBasePath,
-		buildingEntryGlobsRelativeToSoureRootFolder,
+		buildingEntryGlobsRelativeToBasePath,
 		watchingGlobs,
 
 		// building
 		builtOutputBasePath,
-		builtOutputRootFolderName,
-		builtGlobsRelativeToBuildingOutputRootFolder,
+		builtGlobsRelativeToBuiltOutputBasePath,
 		toCreateBuildingTaskBody: toCreateStylusCompilationTaskBody,
 
 		// copying

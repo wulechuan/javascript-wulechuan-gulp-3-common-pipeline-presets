@@ -29,34 +29,26 @@ const createTaskForCopyingFiles         = require('../gulp-task-creators/_generi
 
 function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-statements
 	// logging
-	pipelineCategory, // e.g. 'Javascript' or '爪哇脚本'
-	taskNameKeyPart, // e.g. 'Page: User Dashboard' or maybe just 'App'
+	pipelineCategory,                     // e.g. 'Javascript' or '爪哇脚本'
+	taskNameKeyPart,                      // e.g. 'Page: User Dashboard' or maybe just 'App'
 	basePathForShorteningPathsInLog = '', // e.g. 'front-end/source/js' or 'front-end/source', anything you like.
 
 	// source
-	sourceBasePath, // e.g. 'front-end/source/js'
-	buildingEntryGlobsRelativeToSoureRootFolder, // e.g. [ '**/*.js' ]
-	watchingGlobs, // e.g. [ '**/*.js' ]
+	sourceBasePath,                                    // e.g. 'front-end/source/js'
+	buildingEntryGlobsRelativeToBasePath,       // e.g. [ '**/*.js' ]
+	watchingGlobs,                                     // e.g. [ '**/*.js' ]
 
 	// building
-	builtOutputBasePath, // e.g. '../static' or 'dist/assets'
-	builtOutputRootFolderName, // e.g. 'js'
-	builtGlobsRelativeToBuildingOutputRootFolder = '', // e.g. 'page-user-dashboard'
-	toCreateBuildingTaskBody, // A function to create another function, the created function will be used as the task body of comiplation
+	builtOutputBasePath,                               // e.g. '../static' or 'dist/assets'
+	builtGlobsRelativeToBuiltOutputBasePath = '', // e.g. 'page-user-dashboard'
+	toCreateBuildingTaskBody,                          // A function to create another function, the created function will be used as the task body of source globs building process.
 
 	// copying
 	shouldCopyBuiltFileToElsewhere = false,
-	copyingFilesOutputBasePath, // e.g. 'build/tryout-website/assets'
-	copyingFilesTaskOption, // will be passed to **createTaskForCopyingFiles**
+	copyingFilesOutputBasePath,                        // e.g. 'build/tryout-website/assets'
+	copyingFilesTaskOption,                            // will be passed to **createTaskForCopyingFiles**
 }) {
-	const buildingOutputRootFolder     = joinPath(builtOutputBasePath,        builtOutputRootFolderName);
-	const copyingFilesOutputRootFolder = joinPath(copyingFilesOutputBasePath, builtOutputRootFolderName);
-
-
-
-
-
-	let _sourceGlobsArray = buildingEntryGlobsRelativeToSoureRootFolder;
+	let _sourceGlobsArray = buildingEntryGlobsRelativeToBasePath;
 
 	if (! _sourceGlobsArray) {
 		_sourceGlobsArray = [ '**/*' ];
@@ -75,7 +67,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 
 
-	let _builtGlobsArray = builtGlobsRelativeToBuildingOutputRootFolder;
+	let _builtGlobsArray = builtGlobsRelativeToBuiltOutputBasePath;
 
 	if (! _builtGlobsArray) {
 		_builtGlobsArray = [ '**/*' ];
@@ -97,7 +89,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 
 	const builtGlobs = _validBuiltGlobs.map(
-		glob => joinPath(buildingOutputRootFolder, glob)
+		glob => joinPath(builtOutputBasePath, glob)
 	);
 
 	const globsToCopyAfterEachBuild = [
@@ -111,7 +103,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	let builtGlobCopies;
 	if (shouldCopyBuiltFileToElsewhere) {
 		builtGlobCopies = _validBuiltGlobs.map(
-			glob => joinPath(copyingFilesOutputRootFolder, glob)
+			glob => joinPath(copyingFilesOutputBasePath, glob)
 		);
 		globsToDeleteBeforeEachBuild = [
 			...globsToDeleteBeforeEachBuild,
@@ -148,7 +140,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	const taskBodyOfBuilding = toCreateBuildingTaskBody({
 		taskNameKeyPart,
 		entryGlobsForBuilding,
-		buildingOutputRootFolder,
+		builtOutputBasePath,
 		basePathForShorteningPathsInLog,
 	});
 
@@ -170,7 +162,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 		taskBodyOfCopyingFiles = createTaskForCopyingFiles(
 			globsToCopyAfterEachBuild,
-			copyingFilesOutputRootFolder,
+			copyingFilesOutputBasePath,
 			usedCopyingFilesTaskOption
 		);
 

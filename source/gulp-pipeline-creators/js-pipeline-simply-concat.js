@@ -25,63 +25,78 @@ module.exports = buildAJavascriptBuildingPipelineForOneAppOrOnePage;
 */
 
 const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-skeleton-to-build-and-then-copy');
-const createTaskBodyForCompilingJavascript = require('../gulp-task-creators/js-simply-concat');
+const createTaskBodyForConcatenatingJavascriptFiles = require('../gulp-task-creators/js-simply-concat');
 
 function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
-	taskNameKeyPart, // e.g. 'Page: Marketing Dashboard'
-	appOrPageSourceRootFolderName, // e.g. 'page-marketing-dashboard'
+	// logging
+	taskNameKeyPart,
+	basePathForShorteningPathsInLog, // optional
+
+	// sources
+	sourceBasePath,
+	buildingEntryGlobsRelativeToBasePath,
+	watchingGlobs, // optional
+
+	// building
+	builtOutputBasePath,
+	builtSingleFileBaseName,
+	shouldNotGenerateMinifiedVersions = false,
+
+	// copying
+	shouldCopyBuiltFileToElsewhere = false,
+	copyingFilesOutputBasePath, // optional
+	copyingFilesTaskOption, // optional
 }) {
-	const sourceBasePath = joinPath(javascriptSourceBasePath, appOrPageSourceRootFolderName);
-	const buildingEntryGlobsRelativeToSoureRootFolder = [ '**/*.js' ];
+	if (! buildingEntryGlobsRelativeToBasePath) {
+		buildingEntryGlobsRelativeToBasePath = joinPath(sourceBasePath, '**/*.js');
+	}
 
-	const builtSingleFileBaseName = appOrPageSourceRootFolderName;
-	const watchingGlobs = [
-		joinPath(sourceBasePath, '**/*.js'),
-	];
+	if (! watchingGlobs) {
+		watchingGlobs = joinPath(sourceBasePath, '**/*.js');
+	}
 
-	const builtGlobsRelativeToBuildingOutputRootFolder = [
+	const builtGlobsRelativeToBuiltOutputBasePath = [
 		`${builtSingleFileBaseName}.js`,
 		`${builtSingleFileBaseName}.min.js`,
 	];
 
-	function toCreateJavascriptCompilationTaskBody({
+	function toSimplyConcatJavascriptFiles({
 		taskNameKeyPart,
 		entryGlobsForBuilding,
 		buildingOutputRootFolder,
 		basePathForShorteningPathsInLog,
 	}) {
-		return createTaskBodyForCompilingJavascript(
+		return createTaskBodyForConcatenatingJavascriptFiles(
 			entryGlobsForBuilding,
 			{
 				taskNameForLogs: taskNameKeyPart,
 				compiledJavascriptOutputFolder: buildingOutputRootFolder,
 				compiledJavascriptFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
-				shouldNotGenerateMinifiedVersions: false,
+				shouldNotGenerateMinifiedVersions,
 			}
 		);
 	}
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: '爪哇脚本',
+		pipelineCategory: 'Javascript',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 
 		// source
 		sourceBasePath,
-		buildingEntryGlobsRelativeToSoureRootFolder,
+		buildingEntryGlobsRelativeToBasePath,
 		watchingGlobs,
 
 		// building
 		builtOutputBasePath,
-		builtOutputRootFolderName,
-		builtGlobsRelativeToBuildingOutputRootFolder,
-		toCreateBuildingTaskBody: toCreateJavascriptCompilationTaskBody,
+		builtGlobsRelativeToBuiltOutputBasePath,
+		toCreateBuildingTaskBody: toSimplyConcatJavascriptFiles,
 
 		// copying
-		shouldCopyBuiltFileToElsewhere: true,
+		shouldCopyBuiltFileToElsewhere,
 		copyingFilesOutputBasePath,
-		copyingFilesTaskOption: null,
+		copyingFilesTaskOption,
 	});
 }
