@@ -1,6 +1,6 @@
 {
   "name": "@wulechuan/gulp-3-common-pipeline-presets",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A collection of pipeline presets for glup 3.9.x.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
@@ -14,7 +14,16 @@
   ],
   "main": "source/index.js",
   "directories": {
-    "tryoutDummyProject": "try-it-out/a-dummy-django-or-java-project"
+    "doc": "docs",
+    "examples": "try-it-out"
+  },
+  "homepage": "https://github.com/wulechuan/javascript-wulechuan-gulp-3-common-pipeline-presets#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wulechuan/javascript-wulechuan-gulp-3-common-pipeline-presets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wulechuan/javascript-wulechuan-gulp-3-common-pipeline-presets/issues"
   },
   "scripts": {
     "gulp": " gulp --gulpfile ./try-it-out/a-dummy-django-or-java-project/front-end/gulpfile.js --silent --",
