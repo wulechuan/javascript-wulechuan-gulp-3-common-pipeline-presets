@@ -1,15 +1,6 @@
 const pathTool = require('path');
 const { join: joinPath } = pathTool;
 
-const sourceRootFolderName      = 'styles';
-const builtOutputRootFolderName = 'css';
-
-const basePathForShorteningPathsInLog = joinPath(global.paths.npmProjectRoot, 'source');
-const sourceBasePath                  = joinPath(global.paths.npmProjectRoot, 'source', sourceRootFolderName);
-
-const builtOutputBasePath        = global.paths.javaStaticFiles;
-const copyingFilesOutputBasePath = global.paths.frontEndBuildAssets;
-
 module.exports = buildACSSStylusBuildingPipelineForOneAppOrOnePage;
 
 /*
@@ -28,13 +19,29 @@ const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-sk
 const createTaskBodyForCompilingStylus = require('../gulp-task-creators/css-compile-stylus');
 
 function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
+	// logging
 	taskNameKeyPart,
+	basePathForShorteningPathsInLog,
+
+	// sources
+	sourceBasePath,
 	buildingEntryGlobsRelativeToSoureRootFolder,
+	watchingGlobs, // optional
+
+	// building
+	builtOutputBasePath,
+	builtOutputRootFolderName,
 	builtSingleFileBaseName,
+
+
+	// copying
+	shouldCopyBuiltFileToElsewhere = true,
+	copyingFilesOutputBasePath,
+	copyingFilesTaskOption = null,
 }) {
-	const watchingGlobs = [
-		joinPath(sourceBasePath, '**/*.styl'),
-	];
+	if (! watchingGlobs) {
+		watchingGlobs = joinPath(sourceBasePath, '**/*.styl');
+	}
 
 	const builtGlobsRelativeToBuildingOutputRootFolder = [
 		`${builtSingleFileBaseName}.css`,
@@ -60,11 +67,11 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: 'CSS: Compiling 司戴勒斯',
+		pipelineCategory: 'CSS: Compiling Stylus',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 
-		// source
+		// sources
 		sourceBasePath,
 		buildingEntryGlobsRelativeToSoureRootFolder,
 		watchingGlobs,
@@ -76,8 +83,8 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		toCreateBuildingTaskBody: toCreateStylusCompilationTaskBody,
 
 		// copying
-		shouldCopyBuiltFileToElsewhere: true,
+		shouldCopyBuiltFileToElsewhere,
 		copyingFilesOutputBasePath,
-		copyingFilesTaskOption: null,
+		copyingFilesTaskOption,
 	});
 }
