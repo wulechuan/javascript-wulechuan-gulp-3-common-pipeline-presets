@@ -11,4 +11,7 @@ module.exports = {
 			concat: require('./gulp-pipeline-creators/js-pipeline-simply-concat'),
 		},
 	},
+	utils: {
+		printCompletionOfOneTask: require('./utils/print-one-task-done'),
+	},
 };

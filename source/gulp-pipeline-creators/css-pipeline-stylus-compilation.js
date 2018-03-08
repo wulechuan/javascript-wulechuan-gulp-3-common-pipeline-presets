@@ -15,7 +15,7 @@ module.exports = buildACSSStylusBuildingPipelineForOneAppOrOnePage;
 * ****************************************
 */
 
-const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-skeleton-to-build-and-then-copy');
+const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-a-skeleton-for-building-and-then-copying');
 const createTaskBodyForCompilingStylus = require('../gulp-task-creators/css-compile-stylus');
 
 function buildACSSStylusBuildingPipelineForOneAppOrOnePage({

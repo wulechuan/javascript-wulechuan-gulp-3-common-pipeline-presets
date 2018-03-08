@@ -1,15 +1,6 @@
 const pathTool = require('path');
 const { join: joinPath } = pathTool;
 
-const sourceRootFolderName      = 'js';
-const builtOutputRootFolderName = 'js';
-
-const basePathForShorteningPathsInLog = joinPath(global.paths.npmProjectRoot, 'source');
-const javascriptSourceBasePath        = joinPath(global.paths.npmProjectRoot, 'source', sourceRootFolderName);
-
-const builtOutputBasePath        = global.paths.javaStaticFiles;
-const copyingFilesOutputBasePath = global.paths.frontEndBuildAssets;
-
 module.exports = buildAJavascriptBuildingPipelineForOneAppOrOnePage;
 
 /*
@@ -24,7 +15,7 @@ module.exports = buildAJavascriptBuildingPipelineForOneAppOrOnePage;
 * ****************************************
 */
 
-const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-skeleton-to-build-and-then-copy');
+const buildAPipelineForBuildingOneAppOrOnePage = require('./_generic-pipeline-a-skeleton-for-building-and-then-copying');
 const createTaskBodyForConcatenatingJavascriptFiles = require('../gulp-task-creators/js-simply-concat');
 
 function buildAJavascriptBuildingPipelineForOneAppOrOnePage({

@@ -7,7 +7,6 @@ const gulp = require('gulp');
 const { join: joinPath } = pathTool;
 const { sync: deleteFilesSync } = deleteFiles;
 
-const printInfoAboutTheCompletionOfTask = require('../../../source/utils/print-one-task-done'); // eslint-disable-line no-unused-vars
 const scopedGlobsLazilyWatchingMechanism = require('@wulechuan/scoped-glob-watchers');
 const {
 	npmProjectRootPath,
@@ -16,7 +15,15 @@ const {
 	desiredNPMProjectName: '@wulechuan/gulp-3-common-pipeline-presets',
 });
 
+
+
+
+
 const gulp3CommonPipelines = require(npmProjectRootPath);
+const printInfoAboutTheCompletionOfTask                  = gulp3CommonPipelines.utils.printCompletionOfOneTask;
+const buildACSSStylusBuildingPipelineForOneAppOrOnePage  = gulp3CommonPipelines.specificPipelines.css.stylusCompilation;
+const buildAJavascriptBuildingPipelineForOneAppOrOnePage = gulp3CommonPipelines.specificPipelines.js.concat;
+const buildAPipelineForCopyingSomeFiles                  = gulp3CommonPipelines.genericPipelines.copyFiles;
 
 /*
 *
@@ -79,11 +86,6 @@ const allGlobsToDeleteBeforeEachBuild = [
 * 利用【工作流预设（pipeline presets）】构建的整套整套的任务集
 * *****************************************************
 */
-
-const buildACSSStylusBuildingPipelineForOneAppOrOnePage  = gulp3CommonPipelines.specificPipelines.css.stylusCompilation;
-const buildAJavascriptBuildingPipelineForOneAppOrOnePage = gulp3CommonPipelines.specificPipelines.js.concat;
-const buildAPipelineForCopyingSomeFiles = gulp3CommonPipelines.genericPipelines.copyFiles;
-
 
 const allCSSBuildingPipelines = [
 	buildACSSStylusBuildingPipelineForOneAppOrOnePage({
