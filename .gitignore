@@ -1,3 +1,4 @@
 node_modules
 try-it-out/a-dummy-django-or-java-project/front-end/build/
 try-it-out/a-dummy-django-or-java-project/static/js/page-a-*
+try-it-out/a-dummy-django-or-java-project/static/css/everything.*
