@@ -48,8 +48,8 @@ const javaOrDjangoStaticFilesFolder = 'static';
 
 // --------------- 路径 ---------------
 
-const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoStaticFilesFolder);
-const javaOrDjangoStaticFilesPath   = joinPath(projectRootPath, javaOrDjangoTemplatesFolder);
+const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoTemplatesFolder);
+const javaOrDjangoStaticFilesPath   = joinPath(projectRootPath, javaOrDjangoStaticFilesFolder);
 
 const frontEndBuildRootPath = joinPath(frontEndSubProjectRootPath, 'build');
 const frontEndBuildHTMLPath = frontEndBuildRootPath;
@@ -123,17 +123,29 @@ const allJavascriptBuildingPipelines = [
 			sourceBasePath: joinPath(frontEndSourceRootPath, 'js', 'page-a-django-page'),
 		},
 	}),
+	// buildAJavascriptBuildingPipelineForOneAppOrOnePage({
+	// 	...commonSettingsAcrossMultipleJavascriptPipelines,
+	// 	...{
+	// 		taskNameKeyPart:         '3rd-party Libraries in Static',
+	// 		builtSingleFileBaseName: '3rd-party-lib',
+	// 		sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js', 'lib'),
+	// 	},
+	// }),
 ];
 
 
 
 
 allCSSBuildingPipelines.forEach(thisPipeline => {
-	allGlobsToDeleteBeforeEachBuild.push(thisPipeline.builtGlobs);
+	thisPipeline.builtGlobs.forEach(
+		glob => allGlobsToDeleteBeforeEachBuild.push(glob)
+	);
 });
 
 allJavascriptBuildingPipelines.forEach(thisPipeline => {
-	allGlobsToDeleteBeforeEachBuild.push(thisPipeline.builtGlobs);
+	thisPipeline.builtGlobs.forEach(
+		glob => allGlobsToDeleteBeforeEachBuild.push(glob)
+	);
 });
 
 

@@ -28,7 +28,8 @@
   "scripts": {
     "gulp": " gulp --gulpfile ./try-it-out/a-dummy-django-or-java-project/front-end/gulpfile.js --silent --",
     "gulpRaw": "gulp --gulpfile ./try-it-out/a-dummy-django-or-java-project/front-end/gulpfile.js --",
-    "start": "npm run gulp"
+    "start": "npm run gulp",
+    "clean": "npm run gulp clean"
   },
   "dependencies": {
     "@wulechuan/javascript-gulp-plugin-error-printer": "~0.0.5",
