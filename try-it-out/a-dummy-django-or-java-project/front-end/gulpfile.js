@@ -52,17 +52,17 @@ const projectRootPath = joinPath(frontEndSubProjectRootPath, '..');
 const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoTemplatesFolder);
 const javaOrDjangoStaticFilesPath   = joinPath(projectRootPath, javaOrDjangoStaticFilesFolder);
 
-const frontEndSourceRootPath       = joinPath(frontEndSubProjectRootPath, frontEndSourceRootFolder);
-const frontEndSourceCSSPath        = joinPath(frontEndSourceRootPath, 'styles');
-const frontEndSourceJavascriptPath = joinPath(frontEndSourceRootPath, 'javascript');
+const frontEndSourceRootPath        = joinPath(frontEndSubProjectRootPath, frontEndSourceRootFolder);
+const frontEndSourceCSSPath         = joinPath(frontEndSourceRootPath, 'styles');
+const frontEndSourceJavascriptPath  = joinPath(frontEndSourceRootPath, 'javascript');
 
 const frontEndChiefBuildRootPath       = javaOrDjangoStaticFilesPath;
 const frontEndChiefBuildCSSPath        = joinPath(frontEndChiefBuildRootPath, 'css');
 const frontEndChiefBuildJavascriptPath = joinPath(frontEndChiefBuildRootPath, 'js');
 
-const frontEndTestSiteBuildRootPath  = joinPath(frontEndSubProjectRootPath, frontEndTestSiteBuildFolder);
-const frontEndBuildHTMLPath          = frontEndTestSiteBuildRootPath;
-const frontEndBuildAssetsPath        = joinPath(frontEndTestSiteBuildRootPath, 'assets');
+const frontEndTestSiteRootPath       = joinPath(frontEndSubProjectRootPath, frontEndTestSiteBuildFolder);
+const frontEndTestSiteHTMLPath       = frontEndTestSiteRootPath;
+const frontEndBuildAssetsPath        = joinPath(frontEndTestSiteRootPath, 'assets');
 const frontEndTestSiteIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts');
 const frontEndTestSiteMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
 const frontEndTestSiteJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
@@ -73,7 +73,7 @@ const watchingBasePath = frontEndSubProjectRootPath;
 // --------------- globs ---------------
 
 const allGlobsToDeleteBeforeEachBuild = [
-	frontEndTestSiteBuildRootPath,
+	frontEndTestSiteRootPath,
 ];
 
 
@@ -162,7 +162,7 @@ const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
 	globsRelativeToSoureBasePath: [ '**/*.vm' ],
 	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndBuildHTMLPath,
+	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
 	// copyingFilesTaskOption: null,
 });
 
@@ -172,7 +172,7 @@ const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFil
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
 	globsRelativeToSoureBasePath: [ '**/*.html' ],
 	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndBuildHTMLPath,
+	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
 	// copyingFilesTaskOption: null,
 });
 
