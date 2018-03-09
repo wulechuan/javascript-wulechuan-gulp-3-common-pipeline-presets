@@ -62,11 +62,11 @@ const frontEndChiefBuildJavascriptPath = joinPath(frontEndChiefBuildRootPath, 'j
 
 const frontEndTestSiteRootPath       = joinPath(frontEndSubProjectRootPath, frontEndTestSiteBuildFolder);
 const frontEndTestSiteHTMLPath       = frontEndTestSiteRootPath;
-const frontEndBuildAssetsPath        = joinPath(frontEndTestSiteRootPath, 'assets');
-const frontEndTestSiteIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts');
-const frontEndTestSiteMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
-const frontEndTestSiteJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
-const frontEndTestSiteCSSPath        = joinPath(frontEndBuildAssetsPath, 'css');
+const frontEndTestSiteAssetsPath     = joinPath(frontEndTestSiteRootPath, 'assets');
+const frontEndTestSiteIconfontsPath  = joinPath(frontEndTestSiteAssetsPath, 'fonts');
+const frontEndTestSiteMediaPath      = joinPath(frontEndTestSiteAssetsPath, 'images');
+const frontEndTestSiteJavascriptPath = joinPath(frontEndTestSiteAssetsPath, 'js');
+const frontEndTestSiteCSSPath        = joinPath(frontEndTestSiteAssetsPath, 'css');
 
 const watchingBasePath = frontEndSubProjectRootPath;
 
@@ -141,16 +141,13 @@ const allJavascriptBuildingPipelines = [
 
 
 
-allCSSBuildingPipelines.forEach(thisPipeline => {
-	thisPipeline.builtGlobs.forEach(
-		glob => allGlobsToDeleteBeforeEachBuild.push(glob)
-	);
-});
-
-allJavascriptBuildingPipelines.forEach(thisPipeline => {
-	thisPipeline.builtGlobs.forEach(
-		glob => allGlobsToDeleteBeforeEachBuild.push(glob)
-	);
+gulp3CommonPipelines.utils.forAGlobArrayExcludeGlobsInPipelines({
+	globArrayToExcludeThingsOutOf: allGlobsToDeleteBeforeEachBuild,
+	globsPropertyNameOfAPipelineSettings: 'builtGlobs',
+	pipelineSettingsArray: [
+		...allCSSBuildingPipelines,
+		...allJavascriptBuildingPipelines,
+	],
 });
 
 
@@ -388,12 +385,19 @@ function findNPMProjectRootFolderAndPackageJSON(options) {
 	}
 
 	const { desiredNPMProjectName } = options;
-	if (! ( // https://docs.npmjs.com/files/package.json#name
-		(
-			desiredNPMProjectName.match(/@[a-z]+\/[a-z_-]+/) ||
-			desiredNPMProjectName.match(/[a-z]+[a-z_-]+/)
-		) && desiredNPMProjectName.length < 215
-	)) {
+	if (
+		// https://docs.npmjs.com/files/package.json#name
+		! (
+			(
+				desiredNPMProjectName.match(/@[a-z]+\/[a-z_-]+/) ||
+				desiredNPMProjectName.match(/[a-z]+[a-z_-]+/)
+			)
+
+			&&
+
+			desiredNPMProjectName.length < 215
+		)
+	) {
 		throw RangeError('NPM project name should only contains lowercase letters, "@", "-", "_", or "/".');
 	}
 
