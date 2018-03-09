@@ -59,7 +59,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 	const entryGlobsForBuilding = _sourceGlobsArray.reduce((accum, glob) => {
 		if (typeof glob === 'string') {
-			accum.push(joinPath(sourceBasePath, glob));
+			accum.push(pathTool.resolve(sourceBasePath, glob));
 		}
 
 		return accum;

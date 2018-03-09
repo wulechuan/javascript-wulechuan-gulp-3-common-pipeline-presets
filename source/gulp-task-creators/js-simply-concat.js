@@ -18,6 +18,11 @@ module.exports = function createTaskBodyForCompilingJS(sourceGlobsOfJavascript, 
 	return (thisTaskIsDone) => {
 		const taskSteps = [];
 
+		console.log(sourceGlobsOfJavascript.join('\n'));
+		console.log('to:');
+		console.log(compiledJavascriptOutputFolder);
+		console.log(`${compiledJavascriptFileBaseName}.js`);
+
 		taskSteps.push(gulp.src(sourceGlobsOfJavascript));
 		taskSteps.push(concatFiles(`${compiledJavascriptFileBaseName}.js`));
 		taskSteps.push(gulp.dest(compiledJavascriptOutputFolder));

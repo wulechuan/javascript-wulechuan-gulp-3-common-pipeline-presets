@@ -47,7 +47,6 @@ const javaOrDjangoStaticFilesFolder = 'static';
 // --------------- 路径 ---------------
 
 const frontEndSubProjectRootPath = process.cwd();
-const watchingBasePath = frontEndSubProjectRootPath;
 const projectRootPath = joinPath(frontEndSubProjectRootPath, '..');
 
 const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoTemplatesFolder);
@@ -68,6 +67,8 @@ const frontEndTestSiteIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts'
 const frontEndTestSiteMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
 const frontEndTestSiteJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
 const frontEndTestSiteCSSPath        = joinPath(frontEndBuildAssetsPath, 'css');
+
+const watchingBasePath = frontEndSubProjectRootPath;
 
 // --------------- globs ---------------
 
@@ -107,40 +108,34 @@ const allCSSBuildingPipelines = [
 
 const commonSettingsAcrossMultipleJavascriptPipelines = {
 	basePathForShorteningPathsInLog: projectRootPath,
-
-	...{
-		builtOutputBasePath: frontEndChiefBuildJavascriptPath,
-		shouldCopyBuiltFileToElsewhere: true,
-		copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
-		watchingBasePath,
-	},
+	sourceBasePath: frontEndSourceJavascriptPath,
+	watchingBasePath,
+	builtOutputBasePath: frontEndChiefBuildJavascriptPath,
+	shouldCopyBuiltFileToElsewhere: true,
+	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
 };
 
 const allJavascriptBuildingPipelines = [
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		...commonSettingsAcrossMultipleJavascriptPipelines,
-		...{
-			taskNameKeyPart:         'For a Fake Java Tempalte',
-			builtSingleFileBaseName: 'page-a-java-served-web-page',
-			sourceBasePath: joinPath(frontEndSourceJavascriptPath, 'page-a-java-page'),
-		},
+
+		taskNameKeyPart:         'For a Fake Java Tempalte',
+		builtSingleFileBaseName: 'page-a-java-served-web-page',
+		buildingEntryGlobsRelativeToBasePath: [
+			joinPath('common', '/**/*.js'),
+			joinPath('page-a-java-page', '/**/*.js'),
+		],
 	}),
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		...commonSettingsAcrossMultipleJavascriptPipelines,
-		...{
-			taskNameKeyPart:         'For a Fake Django Tempalte',
-			builtSingleFileBaseName: 'page-a-django-page',
-			sourceBasePath: joinPath(frontEndSourceJavascriptPath, 'page-a-django-page'),
-		},
+
+		taskNameKeyPart:         'For a Fake Django Tempalte',
+		builtSingleFileBaseName: 'page-a-django-page',
+		buildingEntryGlobsRelativeToBasePath: [
+			joinPath('common', '/**/*.js'),
+			joinPath('page-a-django-page', '/**/*.js'),
+		],
 	}),
-	// buildAJavascriptBuildingPipelineForOneAppOrOnePage({
-	// 	...commonSettingsAcrossMultipleJavascriptPipelines,
-	// 	...{
-	// 		taskNameKeyPart:         '3rd-party Libraries in Static',
-	// 		builtSingleFileBaseName: '3rd-party-lib',
-	// 		sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js', 'lib'),
-	// 	},
-	// }),
 ];
 
 
@@ -346,11 +341,20 @@ function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchi
 	piplineSettingsArray.forEach(pipelineSettings => {
 		const scopeName = pipelineSettings.pipelineFullName;
 		scopedWatchingSettings[scopeName] = {
-			basePath: pipelineSettings.watchingBasePath,
 			globsToWatch: pipelineSettings.globsToWatch,
 			actionToTake: pipelineSettings.actionToTakeOnSourceFileEvents,
 			shouldTakeActionOnWatcherCreation,
 		};
+
+		if (pipelineSettings.watchingBasePath) {
+			scopedWatchingSettings[scopeName].basePath = pipelineSettings.watchingBasePath;
+		}
+
+		console.log('basePath:');
+		console.log(scopedWatchingSettings[scopeName].basePath);
+		console.log('\nglobsToWatch:');
+		console.log(scopedWatchingSettings[scopeName].globsToWatch);
+		console.log('========================\n\n\n');
 	});
 }
 

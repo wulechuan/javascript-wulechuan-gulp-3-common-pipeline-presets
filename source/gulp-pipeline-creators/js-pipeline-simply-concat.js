@@ -27,7 +27,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	sourceBasePath,
 	buildingEntryGlobsRelativeToBasePath, // optional
 	watchingGlobs, // optional
-	watchingBasePath,
+	watchingBasePath, // optional
 
 	// building
 	builtOutputBasePath,
@@ -41,11 +41,26 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 }) {
 	if (! buildingEntryGlobsRelativeToBasePath) {
 		buildingEntryGlobsRelativeToBasePath = joinPath(sourceBasePath, '**/*.js');
+
+		if (watchingGlobs || watchingBasePath) {
+			throw Error('Why do we have settings for watching globs but NOT settings for source globs?');
+		}
+	}
+
+	if (! watchingBasePath) {
+		watchingBasePath = sourceBasePath;
 	}
 
 	if (! watchingGlobs) {
-		watchingGlobs = joinPath(sourceBasePath, '**/*.js');
+		watchingGlobs = buildingEntryGlobsRelativeToBasePath;
 	}
+
+	const resovledWatchingGlobs = watchingGlobs.map(
+		glob => pathTool.relative(
+			watchingBasePath,
+			pathTool.resolve(watchingBasePath, glob)
+		)
+	);
 
 	const builtGlobsRelativeToBuiltOutputBasePath = [
 		`${builtSingleFileBaseName}.js`,
@@ -55,14 +70,14 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	function toSimplyConcatJavascriptFiles({
 		taskNameKeyPart,
 		entryGlobsForBuilding,
-		buildingOutputRootFolder,
+		builtOutputBasePath,
 		basePathForShorteningPathsInLog,
 	}) {
 		return createTaskBodyForConcatenatingJavascriptFiles(
 			entryGlobsForBuilding,
 			{
 				taskNameForLogs: taskNameKeyPart,
-				compiledJavascriptOutputFolder: buildingOutputRootFolder,
+				compiledJavascriptOutputFolder: builtOutputBasePath,
 				compiledJavascriptFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
 				shouldNotGenerateMinifiedVersions,
@@ -79,7 +94,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		// source
 		sourceBasePath,
 		buildingEntryGlobsRelativeToBasePath,
-		watchingGlobs,
+		watchingGlobs: resovledWatchingGlobs,
 		watchingBasePath,
 
 		// building
