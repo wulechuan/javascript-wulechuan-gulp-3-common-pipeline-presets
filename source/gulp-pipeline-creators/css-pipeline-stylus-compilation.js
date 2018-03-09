@@ -27,6 +27,7 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 	sourceBasePath,
 	buildingEntryGlobsRelativeToBasePath,
 	watchingGlobs, // optional
+	watchingBasePath,
 
 	// building
 	builtOutputBasePath,
@@ -72,6 +73,7 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		// sources
 		sourceBasePath,
 		buildingEntryGlobsRelativeToBasePath,
+		watchingBasePath,
 		watchingGlobs,
 
 		// building

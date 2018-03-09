@@ -1,1 +1,1 @@
-console.log('This is a fake util');
+console.log('This is a fake util. It\'s loaded successfully.');

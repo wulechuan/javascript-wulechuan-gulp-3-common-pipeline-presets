@@ -39,23 +39,31 @@ const buildAPipelineForCopyingSomeFiles                  = gulp3CommonPipelines.
 
 // --------------- 基本常量 ---------------
 
-const frontEndSubProjectRootPath = process.cwd();
-const projectRootPath = joinPath(frontEndSubProjectRootPath, '..');
-const frontEndSourceRootPath = joinPath(frontEndSubProjectRootPath, 'source');
-
+const frontEndSourceRootFolder = 'source';
+const frontEndTestSiteBuildFolder = 'build';
 const javaOrDjangoTemplatesFolder = 'templates';
 const javaOrDjangoStaticFilesFolder = 'static';
 
 // --------------- 路径 ---------------
 
+const frontEndSubProjectRootPath = process.cwd();
+const watchingBasePath = frontEndSubProjectRootPath;
+const projectRootPath = joinPath(frontEndSubProjectRootPath, '..');
+
 const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoTemplatesFolder);
 const javaOrDjangoStaticFilesPath   = joinPath(projectRootPath, javaOrDjangoStaticFilesFolder);
 
-const frontEndBuildRootPath = joinPath(frontEndSubProjectRootPath, 'build');
-const frontEndBuildHTMLPath = frontEndBuildRootPath;
+const frontEndSourceRootPath       = joinPath(frontEndSubProjectRootPath, frontEndSourceRootFolder);
+const frontEndSourceCSSPath        = joinPath(frontEndSourceRootPath, 'styles');
+const frontEndSourceJavascriptPath = joinPath(frontEndSourceRootPath, 'javascript');
 
-const frontEndBuildAssetsPath     = joinPath(frontEndBuildRootPath, 'assets');
+const frontEndChiefBuildRootPath       = javaOrDjangoStaticFilesPath;
+const frontEndChiefBuildCSSPath        = joinPath(frontEndChiefBuildRootPath, 'css');
+const frontEndChiefBuildJavascriptPath = joinPath(frontEndChiefBuildRootPath, 'js');
 
+const frontEndTestSiteBuildRootPath  = joinPath(frontEndSubProjectRootPath, frontEndTestSiteBuildFolder);
+const frontEndBuildHTMLPath          = frontEndTestSiteBuildRootPath;
+const frontEndBuildAssetsPath        = joinPath(frontEndTestSiteBuildRootPath, 'assets');
 const frontEndTestSiteIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts');
 const frontEndTestSiteMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
 const frontEndTestSiteJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
@@ -64,7 +72,7 @@ const frontEndTestSiteCSSPath        = joinPath(frontEndBuildAssetsPath, 'css');
 // --------------- globs ---------------
 
 const allGlobsToDeleteBeforeEachBuild = [
-	frontEndBuildRootPath,
+	frontEndTestSiteBuildRootPath,
 ];
 
 
@@ -84,10 +92,11 @@ const allCSSBuildingPipelines = [
 	buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		taskNameKeyPart: 'App',
 		basePathForShorteningPathsInLog: projectRootPath,
-		sourceBasePath: joinPath(frontEndSourceRootPath, 'styles'),
+		sourceBasePath: frontEndSourceCSSPath,
 		buildingEntryGlobsRelativeToBasePath: 'everything.styl',
-		builtOutputBasePath: joinPath(javaOrDjangoStaticFilesPath, 'css'),
+		builtOutputBasePath: frontEndChiefBuildCSSPath,
 		builtSingleFileBaseName: 'everything',
+		watchingBasePath,
 		shouldCopyBuiltFileToElsewhere: true,
 		copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
 	}),
@@ -100,9 +109,10 @@ const commonSettingsAcrossMultipleJavascriptPipelines = {
 	basePathForShorteningPathsInLog: projectRootPath,
 
 	...{
-		builtOutputBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js'),
+		builtOutputBasePath: frontEndChiefBuildJavascriptPath,
 		shouldCopyBuiltFileToElsewhere: true,
 		copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
+		watchingBasePath,
 	},
 };
 
@@ -112,7 +122,7 @@ const allJavascriptBuildingPipelines = [
 		...{
 			taskNameKeyPart:         'For a Fake Java Tempalte',
 			builtSingleFileBaseName: 'page-a-java-served-web-page',
-			sourceBasePath: joinPath(frontEndSourceRootPath, 'js', 'page-a-java-page'),
+			sourceBasePath: joinPath(frontEndSourceJavascriptPath, 'page-a-java-page'),
 		},
 	}),
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
@@ -120,7 +130,7 @@ const allJavascriptBuildingPipelines = [
 		...{
 			taskNameKeyPart:         'For a Fake Django Tempalte',
 			builtSingleFileBaseName: 'page-a-django-page',
-			sourceBasePath: joinPath(frontEndSourceRootPath, 'js', 'page-a-django-page'),
+			sourceBasePath: joinPath(frontEndSourceJavascriptPath, 'page-a-django-page'),
 		},
 	}),
 	// buildAJavascriptBuildingPipelineForOneAppOrOnePage({
@@ -255,10 +265,10 @@ gulp.task('build: javascript: all', [
 ]);
 
 gulp.task('build: everything', [
-	frontEndTestSitePipeline_javaTemplates  .taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_djangoTemplates.taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_staticFiles_media     .taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_staticFiles_iconfonts     .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_javaTemplates        .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_djangoTemplates      .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_media    .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_iconfonts.taskNameOfCopyingFiles,
 	'build: css: all',
 	'build: javascript: all',
 ]);
@@ -336,6 +346,7 @@ function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchi
 	piplineSettingsArray.forEach(pipelineSettings => {
 		const scopeName = pipelineSettings.pipelineFullName;
 		scopedWatchingSettings[scopeName] = {
+			basePath: pipelineSettings.watchingBasePath,
 			globsToWatch: pipelineSettings.globsToWatch,
 			actionToTake: pipelineSettings.actionToTakeOnSourceFileEvents,
 			shouldTakeActionOnWatcherCreation,

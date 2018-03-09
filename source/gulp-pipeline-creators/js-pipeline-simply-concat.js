@@ -27,6 +27,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	sourceBasePath,
 	buildingEntryGlobsRelativeToBasePath, // optional
 	watchingGlobs, // optional
+	watchingBasePath,
 
 	// building
 	builtOutputBasePath,
@@ -79,6 +80,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		sourceBasePath,
 		buildingEntryGlobsRelativeToBasePath,
 		watchingGlobs,
+		watchingBasePath,
 
 		// building
 		builtOutputBasePath,

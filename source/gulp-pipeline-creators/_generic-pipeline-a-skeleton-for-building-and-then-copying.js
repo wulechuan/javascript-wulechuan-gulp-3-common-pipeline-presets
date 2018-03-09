@@ -37,6 +37,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	sourceBasePath,                                    // e.g. 'front-end/source/js'
 	buildingEntryGlobsRelativeToBasePath,       // e.g. [ '**/*.js' ]
 	watchingGlobs,                                     // e.g. [ '**/*.js' ]
+	watchingBasePath,
 
 	// building
 	builtOutputBasePath,                               // e.g. '../static' or 'dist/assets'
@@ -197,6 +198,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 		pipelineFullName,
 
 		builtGlobs,
+		watchingBasePath,
 		globsToWatch: watchingGlobs,
 		globsToDeleteBeforeEachBuild,
 		globsToCopyAfterEachBuild,
