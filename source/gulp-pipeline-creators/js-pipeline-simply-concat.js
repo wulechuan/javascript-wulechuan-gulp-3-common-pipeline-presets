@@ -25,7 +25,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 
 	// sources
 	sourceBasePath,
-	buildingEntryGlobsRelativeToBasePath,
+	buildingEntryGlobsRelativeToBasePath, // optional
 	watchingGlobs, // optional
 
 	// building

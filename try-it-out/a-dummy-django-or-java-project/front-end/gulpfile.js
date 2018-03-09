@@ -41,6 +41,7 @@ const buildAPipelineForCopyingSomeFiles                  = gulp3CommonPipelines.
 
 const frontEndSubProjectRootPath = process.cwd();
 const projectRootPath = joinPath(frontEndSubProjectRootPath, '..');
+const frontEndSourceRootPath = joinPath(frontEndSubProjectRootPath, 'source');
 
 const javaOrDjangoTemplatesFolder = 'templates';
 const javaOrDjangoStaticFilesFolder = 'static';
@@ -55,18 +56,10 @@ const frontEndBuildHTMLPath = frontEndBuildRootPath;
 
 const frontEndBuildAssetsPath     = joinPath(frontEndBuildRootPath, 'assets');
 
-const frontEndBuildIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts');
-const frontEndBuildMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
-const frontEndBuildJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
-const frontEndBuildCSSPath        = joinPath(frontEndBuildAssetsPath, 'css');
-
-global.paths = {
-	npmProjectRoot:    npmProjectRootPath,
-	javaPageTemplates: javaOrDjangoPageTemplatesPath,
-	javaStaticFiles:   javaOrDjangoStaticFilesPath,
-	frontEndBuild:       frontEndBuildRootPath,
-	frontEndBuildAssets: frontEndBuildAssetsPath,
-};
+const frontEndTestSiteIconfontsPath  = joinPath(frontEndBuildAssetsPath, 'fonts');
+const frontEndTestSiteMediaPath      = joinPath(frontEndBuildAssetsPath, 'images');
+const frontEndTestSiteJavascriptPath = joinPath(frontEndBuildAssetsPath, 'js');
+const frontEndTestSiteCSSPath        = joinPath(frontEndBuildAssetsPath, 'css');
 
 // --------------- globs ---------------
 
@@ -90,21 +83,50 @@ const allGlobsToDeleteBeforeEachBuild = [
 const allCSSBuildingPipelines = [
 	buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		taskNameKeyPart: 'App',
-		buildingEntryGlobsRelativeToSoureRootFolder: 'everything.styl',
+		basePathForShorteningPathsInLog: projectRootPath,
+		sourceBasePath: joinPath(frontEndSourceRootPath, 'styles'),
+		buildingEntryGlobsRelativeToBasePath: 'everything.styl',
+		builtOutputBasePath: joinPath(javaOrDjangoStaticFilesPath, 'css'),
 		builtSingleFileBaseName: 'everything',
+		shouldCopyBuiltFileToElsewhere: true,
+		copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
 	}),
 ];
 
+
+
+
+const commonSettingsAcrossMultipleJavascriptPipelines = {
+	basePathForShorteningPathsInLog: projectRootPath,
+
+	...{
+		builtOutputBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js'),
+		shouldCopyBuiltFileToElsewhere: true,
+		copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
+	},
+};
+
 const allJavascriptBuildingPipelines = [
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
-		taskNameKeyPart:               'Fake Java Tempalte',
-		appOrPageSourceRootFolderName: 'fake-java-page',
+		...commonSettingsAcrossMultipleJavascriptPipelines,
+		...{
+			taskNameKeyPart:         'For a Fake Java Tempalte',
+			builtSingleFileBaseName: 'page-a-java-served-web-page',
+			sourceBasePath: joinPath(frontEndSourceRootPath, 'js', 'page-a-java-page'),
+		},
 	}),
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
-		taskNameKeyPart:               'Fake Django Template',
-		appOrPageSourceRootFolderName: 'fake-django-page',
+		...commonSettingsAcrossMultipleJavascriptPipelines,
+		...{
+			taskNameKeyPart:         'For a Fake Django Tempalte',
+			builtSingleFileBaseName: 'page-a-django-page',
+			sourceBasePath: joinPath(frontEndSourceRootPath, 'js', 'page-a-django-page'),
+		},
 	}),
 ];
+
+
+
 
 allCSSBuildingPipelines.forEach(thisPipeline => {
 	allGlobsToDeleteBeforeEachBuild.push(thisPipeline.builtGlobs);
@@ -117,7 +139,7 @@ allJavascriptBuildingPipelines.forEach(thisPipeline => {
 
 
 
-const javaStaticFilesPipeline_HTML = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Java Templates',
 	taskNameKeyPart: 'HTML (.vm)',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
@@ -127,7 +149,7 @@ const javaStaticFilesPipeline_HTML = buildAPipelineForCopyingSomeFiles({
 	// copyingFilesTaskOption: null,
 });
 
-const djangoStaticFilesPipeline_HTML = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Django Templates',
 	taskNameKeyPart: 'HTML',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
@@ -137,27 +159,27 @@ const djangoStaticFilesPipeline_HTML = buildAPipelineForCopyingSomeFiles({
 	// copyingFilesTaskOption: null,
 });
 
-const staticFilesPipeline_Media = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'media',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'images'),
 	// globsRelativeToSoureBasePath: [ '**/*' ],
 	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndBuildMediaPath,
+	copyingFilesOutputBasePath: frontEndTestSiteMediaPath,
 	// copyingFilesTaskOption: null,
 });
 
-const staticFilesPipeline_Fonts = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'iconfonts',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'fonts/iconfont*.*'),
 	// globsRelativeToSoureBasePath: [ '**/*' ],
 	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndBuildIconfontsPath,
+	copyingFilesOutputBasePath: frontEndTestSiteIconfontsPath,
 	// copyingFilesTaskOption: null,
 });
 
-const staticFilesPipeline_otherCSS = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'css',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'css'),
@@ -170,11 +192,11 @@ const staticFilesPipeline_otherCSS = buildAPipelineForCopyingSomeFiles({
 			];
 		}, []),
 	],
-	copyingFilesOutputBasePath: frontEndBuildCSSPath,
+	copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
 	// copyingFilesTaskOption: null,
 });
 
-const staticFilesPipeline_otherJavascript = buildAPipelineForCopyingSomeFiles({
+const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'javascript',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js'),
@@ -187,7 +209,7 @@ const staticFilesPipeline_otherJavascript = buildAPipelineForCopyingSomeFiles({
 			];
 		}, []),
 	],
-	copyingFilesOutputBasePath: frontEndBuildJavascriptPath,
+	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
 	// copyingFilesTaskOption: null,
 });
 
@@ -211,20 +233,20 @@ gulp.task('delete old files: everything', (thisTaskIsDone) => {
 });
 
 gulp.task('build: css: all', [
-	staticFilesPipeline_otherCSS.taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_otherCSS.taskNameOfCopyingFiles,
 	...allCSSBuildingPipelines.map(pipeline => pipeline.taskNameOfBuilding),
 ]);
 
 gulp.task('build: javascript: all', [
-	staticFilesPipeline_otherJavascript.taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_otherJavascript.taskNameOfCopyingFiles,
 	...allJavascriptBuildingPipelines.map(pipeline => pipeline.taskNameOfBuilding),
 ]);
 
 gulp.task('build: everything', [
-	javaStaticFilesPipeline_HTML  .taskNameOfCopyingFiles,
-	djangoStaticFilesPipeline_HTML.taskNameOfCopyingFiles,
-	staticFilesPipeline_Media     .taskNameOfCopyingFiles,
-	staticFilesPipeline_Fonts     .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_javaTemplates  .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_djangoTemplates.taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_media     .taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_staticFiles_iconfonts     .taskNameOfCopyingFiles,
 	'build: css: all',
 	'build: javascript: all',
 ]);
@@ -248,12 +270,12 @@ const scopedWatchingSettings = {};
 forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(
 	scopedWatchingSettings,
 
-	javaStaticFilesPipeline_HTML,
-	djangoStaticFilesPipeline_HTML,
-	staticFilesPipeline_Media,
-	staticFilesPipeline_Fonts,
-	staticFilesPipeline_otherCSS,
-	staticFilesPipeline_otherJavascript,
+	frontEndTestSitePipeline_javaTemplates,
+	frontEndTestSitePipeline_djangoTemplates,
+	frontEndTestSitePipeline_staticFiles_media,
+	frontEndTestSitePipeline_staticFiles_iconfonts,
+	frontEndTestSitePipeline_staticFiles_otherCSS,
+	frontEndTestSitePipeline_staticFiles_otherJavascript,
 
 	...allCSSBuildingPipelines,
 	...allJavascriptBuildingPipelines
