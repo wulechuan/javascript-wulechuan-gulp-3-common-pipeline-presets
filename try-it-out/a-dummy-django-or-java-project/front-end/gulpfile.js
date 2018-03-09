@@ -1,5 +1,4 @@
 const pathTool = require('path');
-const fileSytem = require('fs');
 const deleteFiles = require('del');
 
 const gulp = require('gulp');
@@ -11,7 +10,7 @@ const scopedGlobsLazilyWatchingMechanism = require('@wulechuan/scoped-glob-watch
 const {
 	npmProjectRootPath,
 	// packageJSON,
-} = findNPMProjectRootFolderAndPackageJSON({
+} = require('@wulechuan/find-package-dot-json')({
 	desiredNPMProjectName: '@wulechuan/gulp-3-common-pipeline-presets',
 });
 
@@ -144,6 +143,7 @@ const allJavascriptBuildingPipelines = [
 gulp3CommonPipelines.utils.forAGlobArrayExcludeGlobsInPipelines({
 	globArrayToExcludeThingsOutOf: allGlobsToDeleteBeforeEachBuild,
 	globsPropertyNameOfAPipelineSettings: 'builtGlobs',
+
 	pipelineSettingsArray: [
 		...allCSSBuildingPipelines,
 		...allJavascriptBuildingPipelines,
@@ -344,103 +344,11 @@ function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchi
 		};
 
 		if (pipelineSettings.watchingBasePath) {
-			scopedWatchingSettings[scopeName].basePath = pipelineSettings.watchingBasePath;
+			scopedWatchingSettings[scopeName].watchingBasePath = pipelineSettings.watchingBasePath;
 		}
 
-		console.log('basePath:');
-		console.log(scopedWatchingSettings[scopeName].basePath);
-		console.log('\nglobsToWatch:');
-		console.log(scopedWatchingSettings[scopeName].globsToWatch);
-		console.log('========================\n\n\n');
+		if (pipelineSettings.basePathForShorteningPathsInLog) {
+			scopedWatchingSettings[scopeName].basePathForShorteningPathsInLog = pipelineSettings.basePathForShorteningPathsInLog;
+		}
 	});
-}
-
-// function ensureCWDToBeNPMProjectRootAndReturnPackageJSON(options) {
-// 	const result = findNPMProjectRootFolderAndPackageJSON(options);
-
-// 	if (! result) {
-// 		throw ReferenceError('Fail to locate npm project root.');
-// 	}
-
-// 	const {
-// 		npmProjectRootPath,
-// 	} = result;
-
-
-// 	process.chdir(npmProjectRootPath);
-
-// 	console.log(`[${
-// 		chalk.gray(moment().format('HH:mm:ss'))
-// 	}] Working directory changed to\n${' '.repeat('[HH:mm:ss] '.length)}${
-// 		chalk.green(process.cwd())
-// 	}\n\n\n`);
-
-// 	return result;
-// }
-
-
-function findNPMProjectRootFolderAndPackageJSON(options) {
-	if (! options || typeof options !== 'object' || !options.desiredNPMProjectName || typeof options.desiredNPMProjectName !== 'string') {
-		throw TypeError('options must be an object with a non empty string property named "desiredNPMProjectName".');
-	}
-
-	const { desiredNPMProjectName } = options;
-	if (
-		// https://docs.npmjs.com/files/package.json#name
-		! (
-			(
-				desiredNPMProjectName.match(/@[a-z]+\/[a-z_-]+/) ||
-				desiredNPMProjectName.match(/[a-z]+[a-z_-]+/)
-			)
-
-			&&
-
-			desiredNPMProjectName.length < 215
-		)
-	) {
-		throw RangeError('NPM project name should only contains lowercase letters, "@", "-", "_", or "/".');
-	}
-
-
-	let currentCheckingPath = process.cwd();
-	let packageJSON;
-	while (
-		! (packageJSON = foundValidPackageJSON(currentCheckingPath, desiredNPMProjectName)) &&
-		! folderIsTopMostOne(currentCheckingPath)
-	) {
-		currentCheckingPath = pathTool.resolve(currentCheckingPath, '..');
-	}
-
-	if (! packageJSON) {
-		return null;
-	}
-
-	return {
-		npmProjectRootPath: currentCheckingPath,
-		packageJSON,
-	};
-
-
-	function foundValidPackageJSON(folder, desiredNPMProjectName) {
-		const foundPackageJsonFullPath = joinPath(folder, 'package.json');
-
-		if (fileSytem.existsSync(foundPackageJsonFullPath)) {
-			const packageJSON = require(foundPackageJsonFullPath); // eslint-disable-line import/no-dynamic-require
-
-			if (
-				packageJSON && typeof packageJSON === 'object' &&
-				packageJSON.name === desiredNPMProjectName
-			) {
-				return packageJSON;
-			}
-		}
-
-		return null;
-	}
-
-	function folderIsTopMostOne(folder) {
-		// folder = pathTool.resolve(folder);
-		const segments = folder.split(pathTool.sep);
-		return segments.length === 2 && segments[1].length === 0;
-	}
 }

@@ -1,5 +1,19 @@
 const chalk = require('chalk');
-const moment = require('moment');
+
+function formatTimestamp(timestamp) {
+	const dateObjectOfTheTime = new Date(timestamp);
+
+	const hours   = dateObjectOfTheTime.getHours();
+	const minutes = dateObjectOfTheTime.getMinutes();
+	const seconds = dateObjectOfTheTime.getSeconds();
+
+	return [
+		hours   < 10 ? `0${hours}`   : `${hours}`,
+		minutes < 10 ? `0${minutes}` : `${minutes}`,
+		seconds < 10 ? `0${seconds}` : `${seconds}`,
+	].join(':');
+}
+
 
 module.exports = function printInfoAboutTheCompletionOfATask(taskDescription = 'Unspecified Task', errorOccured) {
 	errorOccured = !!errorOccured;
@@ -16,7 +30,7 @@ module.exports = function printInfoAboutTheCompletionOfATask(taskDescription = '
 	const conclusionBgColor  = errorOccured ? 'bgYellow'  : 'bgGreen';
 
 	console.log(`${
-		chalk.gray(moment().format('HH:mm:ss'))
+		chalk.gray(formatTimestamp(Date.now()))
 	} ${
 		chalk[symbolBgColor][symbolColor](symbol)
 	}${

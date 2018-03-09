@@ -139,6 +139,7 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		pipelineFullName: `${pipelineCategory}: ${taskNameKeyPart}`,
 
 		globsToCopy,
+		watchingBasePath: sourceBasePath,
 		globsToWatch: globsToCopy,
 		globsToDeleteBeforeCopyingAgain,
 
