@@ -1,5 +1,3 @@
-/* eslint no-console: 0, indent: [ 2, 'tab' ], no-tabs: 0, global-require: 0 */
-
 const globs = require('globs');
 const gulp = require('gulp');
 const renameFiles = require('gulp-rename');

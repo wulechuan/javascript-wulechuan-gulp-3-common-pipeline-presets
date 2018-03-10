@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@wulechuan/javascript-gulp-plugin-error-printer": "~0.0.6",
-    "@wulechuan/scoped-glob-watchers": "^0.1.0",
+    "@wulechuan/scoped-glob-watchers": "^0.1.3",
     "chalk": "^2.3.1",
     "globs": "^0.1.3",
     "gulp": "3.9.1",

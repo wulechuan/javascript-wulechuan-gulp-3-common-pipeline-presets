@@ -12,7 +12,9 @@
 
 # NPM Page
 
-[@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)
+Package Name: [@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)
+
+Author: 南昌吴乐川
 
 <br/>
 <br/>
