@@ -46,7 +46,7 @@
     "pump": "^3.0.0"
   },
   "devDependencies": {
-    "@wulechuan/find-package-dot-json": "0.0.1",
+    "@wulechuan/find-package-dot-json": "0.0.5",
     "eslint": "^4.18.2"
   }
 }
