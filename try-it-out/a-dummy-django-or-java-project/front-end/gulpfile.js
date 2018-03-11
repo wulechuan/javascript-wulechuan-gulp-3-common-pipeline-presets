@@ -244,29 +244,29 @@ const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCo
 * ****************************************
 */
 
-gulp.task('delete old files: everything', (thisTaskIsDone) => {
+gulp.task('delete generated files: everything', (thisTaskIsDone) => {
 	deleteFilesSync(allGlobsToDeleteBeforeEachBuild, { force: true });
-	printInfoAboutTheCompletionOfTask('delete old files: everything', false);
+	printInfoAboutTheCompletionOfTask('delete generated files: everything', false);
 	thisTaskIsDone();
 });
 
-gulp.task('build: css: all', [
-	frontEndTestSitePipeline_staticFiles_otherCSS.taskNameOfLastTask,
-	...allCSSBuildingPipelines.map(pipeline => pipeline.taskNameOfLastTask),
+gulp.task('build once: css: all', [
+	frontEndTestSitePipeline_staticFiles_otherCSS.taskNameOfMainTask,
+	...allCSSBuildingPipelines.map(pipeline => pipeline.taskNameOfMainTask),
 ]);
 
-gulp.task('build: javascript: all', [
-	frontEndTestSitePipeline_staticFiles_otherJavascript.taskNameOfLastTask,
-	...allJavascriptBuildingPipelines.map(pipeline => pipeline.taskNameOfLastTask),
+gulp.task('build once: javascript: all', [
+	frontEndTestSitePipeline_staticFiles_otherJavascript.taskNameOfMainTask,
+	...allJavascriptBuildingPipelines.map(pipeline => pipeline.taskNameOfMainTask),
 ]);
 
-gulp.task('build: everything', [
-	frontEndTestSitePipeline_javaTemplates        .taskNameOfLastTask,
-	frontEndTestSitePipeline_djangoTemplates      .taskNameOfLastTask,
-	frontEndTestSitePipeline_staticFiles_media    .taskNameOfLastTask,
-	frontEndTestSitePipeline_staticFiles_iconfonts.taskNameOfLastTask,
-	'build: css: all',
-	'build: javascript: all',
+gulp.task('build once: everything', [
+	frontEndTestSitePipeline_javaTemplates        .taskNameOfMainTask,
+	frontEndTestSitePipeline_djangoTemplates      .taskNameOfMainTask,
+	frontEndTestSitePipeline_staticFiles_media    .taskNameOfMainTask,
+	frontEndTestSitePipeline_staticFiles_iconfonts.taskNameOfMainTask,
+	'build once: css: all',
+	'build once: javascript: all',
 ]);
 
 
@@ -323,8 +323,8 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 * ****************************************
 */
 
-gulp.task('clean',      [ 'delete old files: everything' ]); // Simply give it a shorter name.
-gulp.task('build-once', [ 'build: everything' ]);            // Simply give it a shorter name.
+gulp.task('clean',      [ 'delete generated files: everything' ]); // Simply give it a shorter name.
+gulp.task('build-once', [ 'build once: everything' ]);            // Simply give it a shorter name.
 gulp.task('default',    [ 'build and then watch: everything' ]); // The *default* gulp task
 
 /*
