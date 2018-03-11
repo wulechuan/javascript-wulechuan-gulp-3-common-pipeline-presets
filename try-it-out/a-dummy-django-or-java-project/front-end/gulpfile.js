@@ -94,7 +94,7 @@ const allCSSBuildingPipelines = [
 		basePathForShorteningPathsInLog: projectRootPath,
 		sourceBasePath: frontEndSourceCSSPath,
 		buildingEntryGlobsRelativeToBasePath: 'everything.styl',
-		builtOutputBasePath: frontEndChiefBuildCSSPath,
+		outputBasePathOfBuilding: frontEndChiefBuildCSSPath,
 		builtSingleFileBaseName: 'everything',
 		watchingBasePath,
 		shouldCopyBuiltFileToElsewhere: true,
@@ -109,7 +109,7 @@ const commonSettingsAcrossMultipleJavascriptPipelines = {
 	basePathForShorteningPathsInLog: projectRootPath,
 	sourceBasePath: frontEndSourceJavascriptPath,
 	watchingBasePath,
-	builtOutputBasePath: frontEndChiefBuildJavascriptPath,
+	outputBasePathOfBuilding: frontEndChiefBuildJavascriptPath,
 	shouldCopyBuiltFileToElsewhere: true,
 	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
 };
@@ -160,7 +160,7 @@ const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles
 	globsRelativeToSoureBasePath: [ '**/*.vm' ],
 	// excludedSourcGlobs: [],
 	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFiles({
@@ -170,7 +170,7 @@ const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFil
 	globsRelativeToSoureBasePath: [ '**/*.html' ],
 	// excludedSourcGlobs: [],
 	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeFiles({
@@ -180,7 +180,7 @@ const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeF
 	// globsRelativeToSoureBasePath: [ '**/*' ],
 	// excludedSourcGlobs: [],
 	copyingFilesOutputBasePath: frontEndTestSiteMediaPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingSomeFiles({
@@ -190,7 +190,7 @@ const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingS
 	// globsRelativeToSoureBasePath: [ '**/*' ],
 	// excludedSourcGlobs: [],
 	copyingFilesOutputBasePath: frontEndTestSiteIconfontsPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSomeFiles({
@@ -207,7 +207,7 @@ const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSo
 		}, []),
 	],
 	copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCopyingSomeFiles({
@@ -224,7 +224,7 @@ const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCo
 		}, []),
 	],
 	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
-	// copyingFilesTaskOption: null,
+	// optionsOfCopyingFiles: null,
 });
 
 
@@ -339,7 +339,7 @@ function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchi
 		const scopeName = pipelineSettings.pipelineFullName;
 		scopedWatchingSettings[scopeName] = {
 			globsToWatch: pipelineSettings.globsToWatch,
-			actionToTake: pipelineSettings.actionToTakeOnSourceFileEvents,
+			actionToTake: pipelineSettings.actionToTakeOnSourceFilesChange,
 			shouldTakeActionOnWatcherCreation,
 		};
 

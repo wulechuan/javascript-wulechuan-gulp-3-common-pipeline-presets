@@ -1,6 +1,3 @@
-const pathTool = require('path');
-const { join: joinPath } = pathTool;
-
 module.exports = buildACSSStylusBuildingPipelineForOneAppOrOnePage;
 
 /*
@@ -26,23 +23,24 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 	// sources
 	sourceBasePath,
 	buildingEntryGlobsRelativeToBasePath,
-	watchingGlobs, // optional
 	watchingBasePath,
+	watchingGlobsRelativeToWatchingBasePath, // optional
 
 	// building
-	builtOutputBasePath,
+	outputBasePathOfBuilding,
 	builtSingleFileBaseName,
+	shouldNotGenerateMinifiedVersions = false,
 
 	// copying
 	shouldCopyBuiltFileToElsewhere = false,
-	copyingFilesOutputBasePath, // optional
-	copyingFilesTaskOption, // optional
+	outputBasePathOfCopying, // optional
+	optionsOfCopyingFiles,   // optional
 }) {
-	if (! watchingGlobs) {
-		watchingGlobs = joinPath(sourceBasePath, '**/*.styl');
+	if (! watchingGlobsRelativeToWatchingBasePath) {
+		watchingGlobsRelativeToWatchingBasePath = [ '**/*.styl' ];
 	}
 
-	const builtGlobsRelativeToBuiltOutputBasePath = [
+	const builtGlobsRelativeToOutputBasePathOfBuilding = [
 		`${builtSingleFileBaseName}.css`,
 		`${builtSingleFileBaseName}.min.css`,
 	];
@@ -50,23 +48,23 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 	function toCreateStylusCompilationTaskBody({
 		// taskNameKeyPart,
 		entryGlobsForBuilding,
-		builtOutputBasePath,
+		outputBasePathOfBuilding,
 		basePathForShorteningPathsInLog,
 	}) {
 		return createTaskBodyForCompilingStylus(
 			entryGlobsForBuilding,
 			{
-				compiledCSSOutputFolder: builtOutputBasePath,
+				compiledCSSOutputFolder: outputBasePathOfBuilding,
 				compiledCSSFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
-				// shouldNotGenerateMinifiedVersions: false,
+				shouldNotGenerateMinifiedVersions,
 			}
 		);
 	}
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: 'CSS: Compiling Stylus',
+		pipelineCategory: 'CSS: To Compile Stylus',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 
@@ -74,16 +72,16 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		sourceBasePath,
 		buildingEntryGlobsRelativeToBasePath,
 		watchingBasePath,
-		watchingGlobs,
+		watchingGlobsRelativeToWatchingBasePath,
 
 		// building
-		builtOutputBasePath,
-		builtGlobsRelativeToBuiltOutputBasePath,
+		outputBasePathOfBuilding,
+		builtGlobsRelativeToOutputBasePathOfBuilding,
 		toCreateBuildingTaskBody: toCreateStylusCompilationTaskBody,
 
 		// copying
 		shouldCopyBuiltFileToElsewhere,
-		copyingFilesOutputBasePath,
-		copyingFilesTaskOption,
+		outputBasePathOfCopying,
+		optionsOfCopyingFiles,
 	});
 }

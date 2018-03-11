@@ -1,6 +1,3 @@
-const pathTool = require('path');
-const { join: joinPath } = pathTool;
-
 module.exports = buildAJavascriptBuildingPipelineForOneAppOrOnePage;
 
 /*
@@ -21,29 +18,29 @@ const createTaskBodyForConcatenatingJavascriptFiles = require('../gulp-task-crea
 function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	// logging
 	taskNameKeyPart,
-	basePathForShorteningPathsInLog, // optional
+	basePathForShorteningPathsInLog,         // optional
 
 	// sources
 	sourceBasePath,
-	buildingEntryGlobsRelativeToBasePath, // optional
-	watchingGlobs, // optional
-	watchingBasePath, // optional
+	buildingEntryGlobsRelativeToBasePath,    // optional
+	watchingBasePath,                        // optional
+	watchingGlobsRelativeToWatchingBasePath, // optional
 
 	// building
-	builtOutputBasePath,
+	outputBasePathOfBuilding,
 	builtSingleFileBaseName,
 	shouldNotGenerateMinifiedVersions = false,
 
 	// copying
 	shouldCopyBuiltFileToElsewhere = false,
-	copyingFilesOutputBasePath, // optional
-	copyingFilesTaskOption, // optional
+	outputBasePathOfCopying,                 // optional
+	optionsOfCopyingFiles,                   // optional
 }) {
 	if (! buildingEntryGlobsRelativeToBasePath) {
-		buildingEntryGlobsRelativeToBasePath = joinPath(sourceBasePath, '**/*.js');
+		buildingEntryGlobsRelativeToBasePath = [ '**/*.js' ];
 
-		if (watchingGlobs || watchingBasePath) {
-			throw Error('Why do we have settings for watching globs but NOT settings for source globs?');
+		if (watchingBasePath || watchingGlobsRelativeToWatchingBasePath) {
+			throw Error('Why do we have settings for watching globs but NOT those for source globs?');
 		}
 	}
 
@@ -51,18 +48,12 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		watchingBasePath = sourceBasePath;
 	}
 
-	if (! watchingGlobs) {
-		watchingGlobs = buildingEntryGlobsRelativeToBasePath;
+	if (! watchingGlobsRelativeToWatchingBasePath) {
+		watchingGlobsRelativeToWatchingBasePath = buildingEntryGlobsRelativeToBasePath;
 	}
 
-	const resovledWatchingGlobs = watchingGlobs.map(
-		glob => pathTool.relative(
-			watchingBasePath,
-			pathTool.resolve(watchingBasePath, glob)
-		)
-	);
 
-	const builtGlobsRelativeToBuiltOutputBasePath = [
+	const builtGlobsRelativeToOutputBasePathOfBuilding = [
 		`${builtSingleFileBaseName}.js`,
 		`${builtSingleFileBaseName}.min.js`,
 	];
@@ -70,14 +61,14 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	function toSimplyConcatJavascriptFiles({
 		taskNameKeyPart,
 		entryGlobsForBuilding,
-		builtOutputBasePath,
+		outputBasePathOfBuilding,
 		basePathForShorteningPathsInLog,
 	}) {
 		return createTaskBodyForConcatenatingJavascriptFiles(
 			entryGlobsForBuilding,
 			{
 				taskNameForLogs: taskNameKeyPart,
-				compiledJavascriptOutputFolder: builtOutputBasePath,
+				compiledJavascriptOutputFolder: outputBasePathOfBuilding,
 				compiledJavascriptFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
 				shouldNotGenerateMinifiedVersions,
@@ -87,24 +78,24 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: 'Javascript',
+		pipelineCategory: 'Javascript: To Concatenate',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 
 		// source
 		sourceBasePath,
 		buildingEntryGlobsRelativeToBasePath,
-		watchingGlobs: resovledWatchingGlobs,
 		watchingBasePath,
+		watchingGlobsRelativeToWatchingBasePath,
 
 		// building
-		builtOutputBasePath,
-		builtGlobsRelativeToBuiltOutputBasePath,
+		outputBasePathOfBuilding,
+		builtGlobsRelativeToOutputBasePathOfBuilding,
 		toCreateBuildingTaskBody: toSimplyConcatJavascriptFiles,
 
 		// copying
 		shouldCopyBuiltFileToElsewhere,
-		copyingFilesOutputBasePath,
-		copyingFilesTaskOption,
+		outputBasePathOfCopying,
+		optionsOfCopyingFiles,
 	});
 }
