@@ -190,8 +190,8 @@ const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeF
 const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingSomeFiles({
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'iconfonts',
-	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'fonts/iconfont*.*'),
-	// globsToCopyRelativeToSoureBasePath: [ '**/*' ],
+	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'fonts'),
+	globsToCopyRelativeToSoureBasePath: [ '**/iconfont*.*' ],
 	// globsToExclude: [],
 	outputBasePathOfCopying: frontEndTestSiteIconfontsPath,
 	// optionsOfCopyingFiles: null,
@@ -251,20 +251,20 @@ gulp.task('delete old files: everything', (thisTaskIsDone) => {
 });
 
 gulp.task('build: css: all', [
-	frontEndTestSitePipeline_staticFiles_otherCSS.taskNameOfCopyingFiles,
-	...allCSSBuildingPipelines.map(pipeline => pipeline.taskNameOfBuilding),
+	frontEndTestSitePipeline_staticFiles_otherCSS.taskNameOfLastTask,
+	...allCSSBuildingPipelines.map(pipeline => pipeline.taskNameOfLastTask),
 ]);
 
 gulp.task('build: javascript: all', [
-	frontEndTestSitePipeline_staticFiles_otherJavascript.taskNameOfCopyingFiles,
-	...allJavascriptBuildingPipelines.map(pipeline => pipeline.taskNameOfBuilding),
+	frontEndTestSitePipeline_staticFiles_otherJavascript.taskNameOfLastTask,
+	...allJavascriptBuildingPipelines.map(pipeline => pipeline.taskNameOfLastTask),
 ]);
 
 gulp.task('build: everything', [
-	frontEndTestSitePipeline_javaTemplates        .taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_djangoTemplates      .taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_staticFiles_media    .taskNameOfCopyingFiles,
-	frontEndTestSitePipeline_staticFiles_iconfonts.taskNameOfCopyingFiles,
+	frontEndTestSitePipeline_javaTemplates        .taskNameOfLastTask,
+	frontEndTestSitePipeline_djangoTemplates      .taskNameOfLastTask,
+	frontEndTestSitePipeline_staticFiles_media    .taskNameOfLastTask,
+	frontEndTestSitePipeline_staticFiles_iconfonts.taskNameOfLastTask,
 	'build: css: all',
 	'build: javascript: all',
 ]);
@@ -327,6 +327,15 @@ gulp.task('clean',      [ 'delete old files: everything' ]); // Simply give it a
 gulp.task('build-once', [ 'build: everything' ]);            // Simply give it a shorter name.
 gulp.task('default',    [ 'build and then watch: everything' ]); // The *default* gulp task
 
+// console.log('*'.repeat(20));
+// console.log(Object.keys(scopedWatchingSettings).map(key => {
+// 	return `${
+// 		pathTool.relative(frontEndSubProjectRootPath, scopedWatchingSettings[key].watchingBasePath)
+// 	}\n    ${
+// 		scopedWatchingSettings[key].globsToWatch.join('\n    ')
+// 	}`;
+// }).join('\n\n'));
+// console.log('*'.repeat(20));
 
 /*
 *

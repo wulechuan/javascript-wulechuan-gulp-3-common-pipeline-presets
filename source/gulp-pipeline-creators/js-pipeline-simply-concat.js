@@ -38,20 +38,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 }) {
 	if (! buildingEntryGlobsRelativeToSourceBasePath) {
 		buildingEntryGlobsRelativeToSourceBasePath = [ '**/*.js' ];
-
-		if (watchingBasePath || watchingGlobsRelativeToWatchingBasePath) {
-			throw Error('Why do we have settings for watching globs but NOT those for source globs?');
-		}
 	}
-
-	if (! watchingBasePath) {
-		watchingBasePath = sourceBasePath;
-	}
-
-	if (! watchingGlobsRelativeToWatchingBasePath) {
-		watchingGlobsRelativeToWatchingBasePath = buildingEntryGlobsRelativeToSourceBasePath;
-	}
-
 
 	const builtGlobsRelativeToOutputBasePathOfBuilding = [
 		`${builtSingleFileBaseName}.js`,
