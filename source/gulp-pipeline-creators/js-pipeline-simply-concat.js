@@ -18,13 +18,13 @@ const createTaskBodyForConcatenatingJavascriptFiles = require('../gulp-task-crea
 function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	// logging
 	taskNameKeyPart,
-	basePathForShorteningPathsInLog,         // optional
+	basePathForShorteningPathsInLog,            // optional
 
 	// sources
 	sourceBasePath,
-	buildingEntryGlobsRelativeToBasePath,    // optional
-	watchingBasePath,                        // optional
-	watchingGlobsRelativeToWatchingBasePath, // optional
+	buildingEntryGlobsRelativeToSourceBasePath, // optional
+	watchingBasePath,                           // optional
+	watchingGlobsRelativeToWatchingBasePath,    // optional
 
 	// building
 	outputBasePathOfBuilding,
@@ -33,11 +33,11 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 
 	// copying
 	shouldCopyBuiltFileToElsewhere = false,
-	outputBasePathOfCopying,                 // optional
-	optionsOfCopyingFiles,                   // optional
+	outputBasePathOfCopying,                    // optional
+	optionsOfCopyingFiles,                      // optional
 }) {
-	if (! buildingEntryGlobsRelativeToBasePath) {
-		buildingEntryGlobsRelativeToBasePath = [ '**/*.js' ];
+	if (! buildingEntryGlobsRelativeToSourceBasePath) {
+		buildingEntryGlobsRelativeToSourceBasePath = [ '**/*.js' ];
 
 		if (watchingBasePath || watchingGlobsRelativeToWatchingBasePath) {
 			throw Error('Why do we have settings for watching globs but NOT those for source globs?');
@@ -49,7 +49,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	}
 
 	if (! watchingGlobsRelativeToWatchingBasePath) {
-		watchingGlobsRelativeToWatchingBasePath = buildingEntryGlobsRelativeToBasePath;
+		watchingGlobsRelativeToWatchingBasePath = buildingEntryGlobsRelativeToSourceBasePath;
 	}
 
 
@@ -84,7 +84,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 
 		// source
 		sourceBasePath,
-		buildingEntryGlobsRelativeToBasePath,
+		buildingEntryGlobsRelativeToSourceBasePath,
 		watchingBasePath,
 		watchingGlobsRelativeToWatchingBasePath,
 

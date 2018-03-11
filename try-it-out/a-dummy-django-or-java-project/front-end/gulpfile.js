@@ -93,12 +93,12 @@ const allCSSBuildingPipelines = [
 		taskNameKeyPart: 'App',
 		basePathForShorteningPathsInLog: projectRootPath,
 		sourceBasePath: frontEndSourceCSSPath,
-		buildingEntryGlobsRelativeToBasePath: 'everything.styl',
+		// watchingBasePath,
+		buildingEntryGlobsRelativeToSourceBasePath: 'everything.styl',
 		outputBasePathOfBuilding: frontEndChiefBuildCSSPath,
 		builtSingleFileBaseName: 'everything',
-		watchingBasePath,
 		shouldCopyBuiltFileToElsewhere: true,
-		copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
+		outputBasePathOfCopying: frontEndTestSiteCSSPath,
 	}),
 ];
 
@@ -108,11 +108,15 @@ const allCSSBuildingPipelines = [
 const commonSettingsAcrossMultipleJavascriptPipelines = {
 	basePathForShorteningPathsInLog: projectRootPath,
 	sourceBasePath: frontEndSourceJavascriptPath,
-	watchingBasePath,
+	// watchingBasePath,
 	outputBasePathOfBuilding: frontEndChiefBuildJavascriptPath,
 	shouldCopyBuiltFileToElsewhere: true,
-	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
+	outputBasePathOfCopying: frontEndTestSiteJavascriptPath,
 };
+
+const buildingCommonEntryGlobsRelativeToSourceBasePath = [
+	joinPath('common', '/**/*.js'),
+];
 
 const allJavascriptBuildingPipelines = [
 	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
@@ -120,8 +124,8 @@ const allJavascriptBuildingPipelines = [
 
 		taskNameKeyPart:         'For a Fake Java Tempalte',
 		builtSingleFileBaseName: 'page-a-java-served-web-page',
-		buildingEntryGlobsRelativeToBasePath: [
-			joinPath('common', '/**/*.js'),
+		buildingEntryGlobsRelativeToSourceBasePath: [
+			...buildingCommonEntryGlobsRelativeToSourceBasePath,
 			joinPath('page-a-java-page', '/**/*.js'),
 		],
 	}),
@@ -130,8 +134,8 @@ const allJavascriptBuildingPipelines = [
 
 		taskNameKeyPart:         'For a Fake Django Tempalte',
 		builtSingleFileBaseName: 'page-a-django-page',
-		buildingEntryGlobsRelativeToBasePath: [
-			joinPath('common', '/**/*.js'),
+		buildingEntryGlobsRelativeToSourceBasePath: [
+			...buildingCommonEntryGlobsRelativeToSourceBasePath,
 			joinPath('page-a-django-page', '/**/*.js'),
 		],
 	}),
@@ -142,7 +146,7 @@ const allJavascriptBuildingPipelines = [
 
 gulp3CommonPipelines.utils.forAGlobArrayExcludeGlobsInPipelines({
 	globArrayToExcludeThingsOutOf: allGlobsToDeleteBeforeEachBuild,
-	globsPropertyNameOfAPipelineSettings: 'builtGlobs',
+	globsPropertyNameOfAPipelineSettings: 'resolvedPathsOfBuiltGlobs',
 
 	pipelineSettingsArray: [
 		...allCSSBuildingPipelines,
@@ -157,9 +161,9 @@ const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles
 	pipelineCategory: 'Java Templates',
 	taskNameKeyPart: 'HTML (.vm)',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
-	globsRelativeToSoureBasePath: [ '**/*.vm' ],
-	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
+	globsToCopyRelativeToSoureBasePath: [ '**/*.vm' ],
+	// globsToExclude: [],
+	outputBasePathOfCopying: frontEndTestSiteHTMLPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -167,9 +171,9 @@ const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFil
 	pipelineCategory: 'Django Templates',
 	taskNameKeyPart: 'HTML',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
-	globsRelativeToSoureBasePath: [ '**/*.html' ],
-	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndTestSiteHTMLPath,
+	globsToCopyRelativeToSoureBasePath: [ '**/*.html' ],
+	// globsToExclude: [],
+	outputBasePathOfCopying: frontEndTestSiteHTMLPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -177,9 +181,9 @@ const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeF
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'media',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'images'),
-	// globsRelativeToSoureBasePath: [ '**/*' ],
-	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndTestSiteMediaPath,
+	// globsToCopyRelativeToSoureBasePath: [ '**/*' ],
+	// globsToExclude: [],
+	outputBasePathOfCopying: frontEndTestSiteMediaPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -187,9 +191,9 @@ const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingS
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'iconfonts',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'fonts/iconfont*.*'),
-	// globsRelativeToSoureBasePath: [ '**/*' ],
-	// excludedSourcGlobs: [],
-	copyingFilesOutputBasePath: frontEndTestSiteIconfontsPath,
+	// globsToCopyRelativeToSoureBasePath: [ '**/*' ],
+	// globsToExclude: [],
+	outputBasePathOfCopying: frontEndTestSiteIconfontsPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -197,16 +201,16 @@ const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSo
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'css',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'css'),
-	globsRelativeToSoureBasePath: [ '**/*.css' ],
-	excludedSourcGlobs: [
+	globsToCopyRelativeToSoureBasePath: [ '**/*.css' ],
+	globsToExclude: [
 		...allCSSBuildingPipelines.reduce((accum, pipeline) => {
 			return [
 				...accum,
-				...pipeline.builtGlobs,
+				...pipeline['resolvedPathsOfBuiltGlobs'],
 			];
 		}, []),
 	],
-	copyingFilesOutputBasePath: frontEndTestSiteCSSPath,
+	outputBasePathOfCopying: frontEndTestSiteCSSPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -214,16 +218,16 @@ const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCo
 	pipelineCategory: 'Static Files',
 	taskNameKeyPart: 'javascript',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js'),
-	globsRelativeToSoureBasePath: [ '**/*.js' ],
-	excludedSourcGlobs: [
+	globsToCopyRelativeToSoureBasePath: [ '**/*.js' ],
+	globsToExclude: [
 		...allJavascriptBuildingPipelines.reduce((accum, pipeline) => {
 			return [
 				...accum,
-				...pipeline.builtGlobs,
+				...pipeline['resolvedPathsOfBuiltGlobs'],
 			];
 		}, []),
 	],
-	copyingFilesOutputBasePath: frontEndTestSiteJavascriptPath,
+	outputBasePathOfCopying: frontEndTestSiteJavascriptPath,
 	// optionsOfCopyingFiles: null,
 });
 
@@ -337,18 +341,21 @@ gulp.task('default',    [ 'build and then watch: everything' ]); // The *default
 function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchingSettings, ...piplineSettingsArray) {
 	piplineSettingsArray.forEach(pipelineSettings => {
 		const scopeName = pipelineSettings.pipelineFullName;
+
 		scopedWatchingSettings[scopeName] = {
-			globsToWatch: pipelineSettings.globsToWatch,
+			globsToWatch: pipelineSettings.watchingGlobsRelativeToWatchingBasePath,
 			actionToTake: pipelineSettings.actionToTakeOnSourceFilesChange,
 			shouldTakeActionOnWatcherCreation,
 		};
 
-		if (pipelineSettings.watchingBasePath) {
-			scopedWatchingSettings[scopeName].watchingBasePath = pipelineSettings.watchingBasePath;
+		const pipelineWatchingBasePath = pipelineSettings.watchingBasePath;
+		if (pipelineWatchingBasePath && typeof pipelineWatchingBasePath === 'string') {
+			scopedWatchingSettings[scopeName].watchingBasePath = pipelineWatchingBasePath;
 		}
 
-		if (pipelineSettings.basePathForShorteningPathsInLog) {
-			scopedWatchingSettings[scopeName].basePathForShorteningPathsInLog = pipelineSettings.basePathForShorteningPathsInLog;
+		const pipelineLoggingBasePath = pipelineSettings.basePathForShorteningPathsInLog;
+		if (pipelineLoggingBasePath && typeof pipelineLoggingBasePath === 'string') {
+			scopedWatchingSettings[scopeName].basePathForShorteningPathsInLog = pipelineLoggingBasePath;
 		}
 	});
 }

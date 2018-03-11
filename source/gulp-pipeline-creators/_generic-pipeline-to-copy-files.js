@@ -46,8 +46,8 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 	globsToExclude,
 
 	// copying
-	copyingFilesOutputBasePath, // e.g. 'build/tryout-website/assets'
-	optionsOfCopyingFiles, // will be passed to **createTaskForCopyingFiles**
+	outputBasePathOfCopying, // e.g. 'build/tryout-website/assets'
+	optionsOfCopyingFiles,   // will be passed to **createTaskForCopyingFiles**
 }) {
 	const validatedRelativeSourceGlobsToCopy = getValidatedGlobsFrom({
 		rawGlobs: globsToCopyRelativeToSoureBasePath,
@@ -82,7 +82,7 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 	);
 
 	const resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = validatedRelativeSourceGlobsToCopy.map(
-		glob => joinPath(copyingFilesOutputBasePath, glob)
+		glob => joinPath(outputBasePathOfCopying, glob)
 	);
 
 	excludedGlobsRelativeToSourceBasePath.forEach(glob => {
@@ -93,7 +93,7 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 
 	excludedGlobsRelativeToSourceBasePath.forEach(glob => {
 		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain.push(
-			`!${joinPath(copyingFilesOutputBasePath, glob)}`
+			`!${joinPath(outputBasePathOfCopying, glob)}`
 		);
 	});
 
@@ -117,7 +117,7 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		thisTaskIsDone();
 	};
 
-	const usedCopyingFilesTaskOption = {
+	const usedOptionsOfCopyingFiles = {
 		...{
 			shouldFlattenSubFolders:   false,
 			logPrefix:                 taskNameOfCopyingFiles,
@@ -131,8 +131,8 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 
 	const taskBodyOfCopyingFiles = createTaskForCopyingFiles(
 		resolvedPathsOfGlobsToCopy,
-		copyingFilesOutputBasePath,
-		usedCopyingFilesTaskOption
+		outputBasePathOfCopying,
+		usedOptionsOfCopyingFiles
 	);
 
 	const actionToTakeOnSourceFilesChange = taskBodyOfCopyingFiles;
