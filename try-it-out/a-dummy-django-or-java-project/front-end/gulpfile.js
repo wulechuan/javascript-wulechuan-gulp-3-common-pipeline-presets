@@ -282,7 +282,7 @@ gulp.task('build: everything', [
 * ****************************************
 */
 
-const shouldTakeActionOnWatcherCreation = true;
+const shouldTakeActionOnWatcherCreation = false;
 const scopedWatchingSettings = {};
 
 forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(
@@ -326,16 +326,6 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 gulp.task('clean',      [ 'delete old files: everything' ]); // Simply give it a shorter name.
 gulp.task('build-once', [ 'build: everything' ]);            // Simply give it a shorter name.
 gulp.task('default',    [ 'build and then watch: everything' ]); // The *default* gulp task
-
-// console.log('*'.repeat(20));
-// console.log(Object.keys(scopedWatchingSettings).map(key => {
-// 	return `${
-// 		pathTool.relative(frontEndSubProjectRootPath, scopedWatchingSettings[key].watchingBasePath)
-// 	}\n    ${
-// 		scopedWatchingSettings[key].globsToWatch.join('\n    ')
-// 	}`;
-// }).join('\n\n'));
-// console.log('*'.repeat(20));
 
 /*
 *
