@@ -34,9 +34,68 @@ See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
 See the `gulpfile.js` included by this repository as an example.
 
-Below are the key snippet from the said `gulpfile.js`.
+Below are some snippets from the said `gulpfile.js`.
+
+### To create a pipeline for copying some files
+```javascript
+const gulp3CommonPipelines = require('@wulechuan/gulp-3-common-pipeline-presets');
+const buildAPipelineForCopyingSomeFiles = gulp3CommonPipelines.genericPipelines.copyFiles;
+
+const frontEndTestSitePipelineForCopyingJavaTemplates = buildAPipelineForCopyingSomeFiles({
+	pipelineCategory: 'Java Templates',
+	taskNameKeyPart: 'HTML (.vm)',
+	sourceBasePath: javaOrDjangoPageTemplatesPath,
+	globsToCopyRelativeToSoureBasePath: [ '**/*.vm' ],
+	// globsToExclude: [],
+	outputBasePathOfCopying: frontEndTestSiteHTMLPath,
+	// optionsOfCopyingFiles: null,
+});
+```
+
+<br/>
+
+### To create multiple pipelines for concatenation of some javascript source files
 
 ```javascript
+const gulp3CommonPipelines = require('@wulechuan/gulp-3-common-pipeline-presets');
+
+const buildAJavascriptBuildingPipelineForOneAppOrOnePage = gulp3CommonPipelines.specificPipelines.js.concat;
+
+
+
+const commonSettingsAcrossMultipleJavascriptPipelines = {
+	sourceBasePath: 'source/javascript',
+	outputBasePathOfBuilding: '../static/js',
+	shouldCopyBuiltFileToElsewhere: true,
+	outputBasePathOfCopying: 'build/test-site/,
+};
+
+const buildingCommonEntryGlobsRelativeToSourceBasePath = [
+	joinPath('common', '/**/*.js'),
+];
+
+const allJavascriptBuildingPipelines = [
+	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
+		...commonSettingsAcrossMultipleJavascriptPipelines,
+
+		taskNameKeyPart:         'For a Fake Java Tempalte',
+		builtSingleFileBaseName: 'page-a-java-served-web-page',
+		buildingEntryGlobsRelativeToSourceBasePath: [
+			...buildingCommonEntryGlobsRelativeToSourceBasePath,
+			joinPath('page-a-java-page', '/**/*.js'),
+		],
+	}),
+	buildAJavascriptBuildingPipelineForOneAppOrOnePage({
+		...commonSettingsAcrossMultipleJavascriptPipelines,
+
+		taskNameKeyPart:         'For a Fake Django Tempalte',
+		builtSingleFileBaseName: 'page-a-django-page',
+		buildingEntryGlobsRelativeToSourceBasePath: [
+			...buildingCommonEntryGlobsRelativeToSourceBasePath,
+			joinPath('page-a-django-page', '/**/*.js'),
+		],
+	}),
+];
 ```
 
 <br/>
