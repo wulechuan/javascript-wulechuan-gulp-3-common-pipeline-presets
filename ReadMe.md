@@ -67,7 +67,7 @@ const commonSettingsAcrossMultipleJavascriptPipelines = {
 	sourceBasePath: 'source/javascript',
 	outputBasePathOfBuilding: '../static/js',
 	shouldCopyBuiltFileToElsewhere: true,
-	outputBasePathOfCopying: 'build/test-site/,
+	outputBasePathOfCopying: 'build/test-site/',
 };
 
 const buildingCommonEntryGlobsRelativeToSourceBasePath = [
