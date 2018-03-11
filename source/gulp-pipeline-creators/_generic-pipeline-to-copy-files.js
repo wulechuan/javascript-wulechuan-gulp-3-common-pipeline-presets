@@ -158,10 +158,9 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 
 		// globs for watching
 		watchingBasePath: sourceBasePath,
-		watchingGlobsRelativeToBasePath: relativeSourceGlobsToCopyPlusRelativeExcludedGlobs,
+		watchingGlobsRelativeToWatchingBasePath: relativeSourceGlobsToCopyPlusRelativeExcludedGlobs,
 
 		// task names
-
 		taskNameOfLastTaskInThisPipeline,
 		taskNameOfCopyingFiles,
 		taskNameOfDeletingFiles,

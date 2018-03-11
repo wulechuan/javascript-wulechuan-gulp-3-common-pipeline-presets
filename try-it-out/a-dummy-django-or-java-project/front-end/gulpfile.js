@@ -67,7 +67,7 @@ const frontEndTestSiteMediaPath      = joinPath(frontEndTestSiteAssetsPath, 'ima
 const frontEndTestSiteJavascriptPath = joinPath(frontEndTestSiteAssetsPath, 'js');
 const frontEndTestSiteCSSPath        = joinPath(frontEndTestSiteAssetsPath, 'css');
 
-const watchingBasePath = frontEndSubProjectRootPath;
+// const watchingBasePath = frontEndSubProjectRootPath;
 
 // --------------- globs ---------------
 
@@ -299,9 +299,11 @@ forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(
 	...allJavascriptBuildingPipelines
 );
 
+
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(scopedWatchingSettings, {
-		basePath: npmProjectRootPath,
+		watchingBasePath: npmProjectRootPath,
+		basePathForShorteningPathsInLog: frontEndSubProjectRootPath,
 		// shouldLogVerbosely: false,
 	});
 
