@@ -1,5 +1,6 @@
 .vscode
 .eslintrc*
+.eslintignor
 /docs
 /try-it-out
 /gulpfile.js
