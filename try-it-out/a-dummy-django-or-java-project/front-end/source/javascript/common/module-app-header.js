@@ -1,1 +1,0 @@
-console.log('The module AppHeader has been loaded.');

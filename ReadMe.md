@@ -1,14 +1,5 @@
-# NOT READY FOR USAGE!
-# NOT READY FOR USAGE!
-# NOT READY FOR USAGE!
+# _This ReadMe file is still under construction_
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 
 # NPM Page
 
@@ -86,6 +77,21 @@ Open a console/terminal and run:
 npm start
 ```
 That's it.
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### A Snapshos of Mine
+
+Here is a snapshots of my console,
+hosted within Microsoft
+[Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/about),
+running an Ubuntu instance.
+
+![Just started](./docs/illustrates/console-snapshot-001.png "After some random changes")
 
 <br/>
 <br/>

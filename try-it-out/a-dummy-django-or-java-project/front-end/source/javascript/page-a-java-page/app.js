@@ -1,2 +1,2 @@
-var name = 'wulechuan\'s fake django app.';
-console.log('The app: ' + name);
+var name = 'wulechuan\'s fake Django app.';
+console.log('Loaded the app: ' + name);

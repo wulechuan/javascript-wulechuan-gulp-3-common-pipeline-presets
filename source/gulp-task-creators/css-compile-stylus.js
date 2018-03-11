@@ -3,7 +3,7 @@ const renameFile = require('gulp-rename');
 const compileStylus = require('gulp-stylus');
 const pump = require('pump');
 
-const printInfoAboutTheCompletionOfTask = require('../utils/print-one-task-done');
+const printInfoAboutTheCompletionOfTask = require('../utilities/_generic/print-one-task-done');
 const printGulpErrorBeautifully = require('@wulechuan/javascript-gulp-plugin-error-printer');
 
 module.exports = function createTaskForCompilingStylusGlobs(entryStylusGlobs, options) {

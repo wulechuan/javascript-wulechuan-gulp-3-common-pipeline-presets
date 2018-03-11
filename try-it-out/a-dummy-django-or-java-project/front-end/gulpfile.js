@@ -8,8 +8,7 @@ const { sync: deleteFilesSync } = deleteFiles;
 
 const scopedGlobsLazilyWatchingMechanism = require('@wulechuan/scoped-glob-watchers');
 const {
-	npmProjectRootPath,
-	// packageJSON,
+	npmProjectRootPath: gulp3PipelinesNPMProjectRootPath,
 } = require('@wulechuan/find-package-dot-json')({
 	desiredNPMProjectName: '@wulechuan/gulp-3-common-pipeline-presets',
 });
@@ -18,12 +17,16 @@ const {
 
 
 
-const gulp3CommonPipelines = require(npmProjectRootPath);
+const gulp3CommonPipelines = require(gulp3PipelinesNPMProjectRootPath);
+
+const gulp3PipelineUtils = gulp3CommonPipelines.utilities;
 
 const {
 	printCompletionOfOneTask,
 	globOperations,
-} = gulp3CommonPipelines.utils;
+	aggregateTasksInPipelines,
+	forSettingsOfScopedLazyWatchers,
+} = gulp3PipelineUtils;
 
 const buildACSSStylusBuildingPipelineForOneAppOrOnePage  = gulp3CommonPipelines.specificPipelines.css.stylusCompilation;
 const buildAJavascriptBuildingPipelineForOneAppOrOnePage = gulp3CommonPipelines.specificPipelines.js.concat;
@@ -96,7 +99,7 @@ const allGlobsToDeleteBeforeEachBuild = [
 const allCSSBuildingPipelines = [
 	buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		taskNameKeyPart: 'App',
-		basePathForShorteningPathsInLog: projectRootPath,
+		// basePathForShorteningPathsInLog: projectRootPath,
 		sourceBasePath: frontEndSourceCSSPath,
 		// watchingBasePath,
 		buildingEntryGlobsRelativeToSourceBasePath: 'everything.styl',
@@ -111,9 +114,8 @@ const allCSSBuildingPipelines = [
 
 
 const commonSettingsAcrossMultipleJavascriptPipelines = {
-	basePathForShorteningPathsInLog: projectRootPath,
+	// basePathForShorteningPathsInLog: projectRootPath,
 	sourceBasePath: frontEndSourceJavascriptPath,
-	// watchingBasePath,
 	outputBasePathOfBuilding: frontEndChiefBuildJavascriptPath,
 	shouldCopyBuiltFileToElsewhere: true,
 	outputBasePathOfCopying: frontEndTestSiteJavascriptPath,
@@ -289,8 +291,11 @@ gulp.task('build once: everything', [
 
 const scopedWatchingSettings = {};
 
-forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
+forSettingsOfScopedLazyWatchers.appendMoreScopesViaPipelines({
 	scopedWatchingSettingsToModify: scopedWatchingSettings,
+
+	// defaultBasePathForShorteningPathsInLog: frontEndSubProjectRootPath,
+	shouldTakeActionOnWatcherCreation: true,
 
 	involvedPipelines: [
 		frontEndTestSitePipeline_javaTemplates,
@@ -303,16 +308,14 @@ forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
 		...allCSSBuildingPipelines,
 		...allJavascriptBuildingPipelines,
 	],
-
-	defaultBasePathForShorteningPathsInLog: frontEndSubProjectRootPath,
 });
 
 
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 	scopedGlobsLazilyWatchingMechanism.createWatchersAccordingTo(scopedWatchingSettings, {
-		watchingBasePath: npmProjectRootPath,
-		basePathForShorteningPathsInLog: frontEndSubProjectRootPath,
-		// shouldLogVerbosely: false,
+		basePathForShorteningPathsInLog: projectRootPath,
+		// watchingBasePath:                projectRootPath,
+		// shouldLogVerbosely:              false,
 	});
 
 	thisTaskIsDone();
@@ -334,45 +337,3 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 gulp.task('clean',      [ 'delete generated files: everything' ]); // Simply give it a shorter name.
 gulp.task('build-once', [ 'build once: everything' ]);             // Simply give it a shorter name.
 gulp.task('default',    [ 'build and then watch: everything' ]);   // The *default* gulp task
-
-/*
-*
-*
-*
-*
-*
-*
-* ****************************************
-*                 辅助函数
-* ****************************************
-*/
-
-function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
-	scopedWatchingSettingsToModify,
-	involvedPipelines = [],
-	defaultBasePathForShorteningPathsInLog,
-}) {
-	involvedPipelines.forEach(pipeline => {
-		const scopeId = pipeline.pipelineFullName;
-
-		const newWatchingScope = {
-			globsToWatch: pipeline.watchingGlobsRelativeToWatchingBasePath,
-			actionToTake: pipeline.actionToTakeOnSourceFilesChange,
-			shouldTakeActionOnWatcherCreation: true,
-		};
-
-		const { watchingBasePath } = pipeline;
-		if (watchingBasePath && typeof watchingBasePath === 'string') {
-			newWatchingScope.watchingBasePath = watchingBasePath;
-		}
-
-		const loggingBasePath = pipeline.basePathForShorteningPathsInLog;
-		if (loggingBasePath && typeof loggingBasePath === 'string') {
-			newWatchingScope.basePathForShorteningPathsInLog = loggingBasePath;
-		} else if (defaultBasePathForShorteningPathsInLog && typeof defaultBasePathForShorteningPathsInLog === 'string') {
-			newWatchingScope.basePathForShorteningPathsInLog = defaultBasePathForShorteningPathsInLog;
-		}
-
-		scopedWatchingSettingsToModify[scopeId] = newWatchingScope;
-	});
-}

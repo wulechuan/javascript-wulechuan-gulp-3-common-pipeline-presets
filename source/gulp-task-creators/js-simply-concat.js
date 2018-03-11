@@ -3,7 +3,7 @@ const concatFiles = require('gulp-concat');
 const uglifyJavascript = require('gulp-uglify');
 const pump = require('pump');
 
-const printInfoAboutTheCompletionOfTask = require('../utils/print-one-task-done');
+const printInfoAboutTheCompletionOfTask = require('../utilities/_generic/print-one-task-done');
 const printGulpUglifyJsErrorBeautifully = require('@wulechuan/javascript-gulp-plugin-error-printer');
 
 module.exports = function createTaskBodyForCompilingJS(sourceGlobsOfJavascript, options) {
