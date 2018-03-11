@@ -16,7 +16,6 @@ const pathTool = require('path');
 const deleteFiles = require('del');
 
 const gulp = require('gulp');
-const runTasksSequentially = require('gulp-sequence');
 
 // const chalk = require('chalk');
 
@@ -177,12 +176,23 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 		basePathForShorteningPathsInLog,
 	});
 
-	const taskBodyOfDeletingOldOutputFilesAndThenBuilding = (thisTaskIsDone) => {
-		runTasksSequentially(
-			taskNameOfDeletingFilesWithoutPrinting,
-			taskNameOfBuilding
-		)(thisTaskIsDone);
+
+
+	// VERY, VERY UGLY IMPEMENTATION BELOW.
+	// To be improved in the future.
+	const taskBodyOfDeletingOldOutputFilesAndThenBuilding = (thisActionIsDone) => {
+		taskBodyOfDeletingFilesWithoutPrinting(() => {
+			taskBodyOfBuilding(
+				thisActionIsDone
+			);
+		});
 	};
+	// const taskBodyOfDeletingOldOutputFilesAndThenBuilding = (thisTaskIsDone) => {
+	// 	runTasksSequentially(
+	// 		taskNameOfDeletingFilesWithoutPrinting,
+	// 		taskNameOfBuilding
+	// 	)(thisTaskIsDone);
+	// };
 
 
 
@@ -210,14 +220,35 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 
 
-
-		taskBodyOfBuildingAndThenCopyingBuiltOutputFiles = (thisTaskIsDone) => {
-			runTasksSequentially(
-				taskNameOfDeletingFilesWithoutPrinting,
-				taskNameOfBuilding,
-				taskNameOfCopyingFiles
-			)(thisTaskIsDone);
+		// VERY, VERY UGLY IMPEMENTATION BELOW.
+		// To be improved in the future.
+		taskBodyOfBuildingAndThenCopyingBuiltOutputFiles = (thisActionIsDone) => {
+			taskBodyOfDeletingFilesWithoutPrinting(() => {
+				taskBodyOfBuilding(() => {
+					taskBodyOfCopyingFiles(
+						thisActionIsDone
+					);
+				});
+			});
 		};
+		// taskBodyOfBuildingAndThenCopyingBuiltOutputFiles = (thisTaskIsDone) => {
+		// 	runTasksSequentially(
+		// 		taskNameOfDeletingFilesWithoutPrinting,
+		// 		taskNameOfBuilding,
+		// 		taskNameOfCopyingFiles
+		// 	)(thisTaskIsDone);
+		// };
+	}
+
+
+
+
+
+	let actionToTakeOnSourceFilesChange;
+	if (shouldCopyBuiltFileToElsewhere) {
+		actionToTakeOnSourceFilesChange = taskBodyOfBuildingAndThenCopyingBuiltOutputFiles;
+	} else {
+		actionToTakeOnSourceFilesChange = taskBodyOfDeletingOldOutputFilesAndThenBuilding;
 	}
 
 
@@ -225,7 +256,6 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 
 
 
-	let actionToTakeOnSourceFilesChange;
 
 	gulp.task(
 		taskNameOfDeletingFiles,
@@ -253,29 +283,6 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 			taskNameOfBuildingAndThenCopyingBuiltOutputFiles,
 			taskBodyOfBuildingAndThenCopyingBuiltOutputFiles
 		);
-	}
-
-
-
-
-	if (shouldCopyBuiltFileToElsewhere) {
-		actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
-			taskBodyOfDeletingFilesWithoutPrinting(() => {
-				taskBodyOfBuilding(() => {
-					taskBodyOfCopyingFiles(
-						thisActionIsDone
-					);
-				});
-			});
-		};
-	} else {
-		actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
-			taskBodyOfDeletingFilesWithoutPrinting(() => {
-				taskBodyOfBuilding(
-					thisActionIsDone
-				);
-			});
-		};
 	}
 
 

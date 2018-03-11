@@ -1,1 +1,1 @@
-console.log('This is a dummy utility. It\'s loaded successfully.');
+console.log('This is a dummy utility. And it\'s loaded.');

@@ -57,7 +57,7 @@ const javaOrDjangoPageTemplatesPath = joinPath(projectRootPath, javaOrDjangoTemp
 const javaOrDjangoStaticFilesPath   = joinPath(projectRootPath, javaOrDjangoStaticFilesFolder);
 
 const frontEndSourceRootPath        = joinPath(frontEndSubProjectRootPath, frontEndSourceRootFolder);
-const frontEndSourceCSSPath         = joinPath(frontEndSourceRootPath, 'styles');
+const frontEndSourceCSSPath         = joinPath(frontEndSourceRootPath, 'stylus');
 const frontEndSourceJavascriptPath  = joinPath(frontEndSourceRootPath, 'javascript');
 
 const frontEndChiefBuildRootPath       = javaOrDjangoStaticFilesPath;
@@ -303,6 +303,8 @@ forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
 		...allCSSBuildingPipelines,
 		...allJavascriptBuildingPipelines,
 	],
+
+	defaultBasePathForShorteningPathsInLog: frontEndSubProjectRootPath,
 });
 
 
@@ -348,9 +350,10 @@ gulp.task('default',    [ 'build and then watch: everything' ]);   // The *defau
 function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
 	scopedWatchingSettingsToModify,
 	involvedPipelines = [],
+	defaultBasePathForShorteningPathsInLog,
 }) {
 	involvedPipelines.forEach(pipeline => {
-		const scopeName = pipeline.pipelineFullName;
+		const scopeId = pipeline.pipelineFullName;
 
 		const newWatchingScope = {
 			globsToWatch: pipeline.watchingGlobsRelativeToWatchingBasePath,
@@ -366,8 +369,10 @@ function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
 		const loggingBasePath = pipeline.basePathForShorteningPathsInLog;
 		if (loggingBasePath && typeof loggingBasePath === 'string') {
 			newWatchingScope.basePathForShorteningPathsInLog = loggingBasePath;
+		} else if (defaultBasePathForShorteningPathsInLog && typeof defaultBasePathForShorteningPathsInLog === 'string') {
+			newWatchingScope.basePathForShorteningPathsInLog = defaultBasePathForShorteningPathsInLog;
 		}
 
-		scopedWatchingSettingsToModify[scopeName] = newWatchingScope;
+		scopedWatchingSettingsToModify[scopeId] = newWatchingScope;
 	});
 }

@@ -16,7 +16,6 @@ const pathTool = require('path');
 const deleteFiles = require('del');
 
 const gulp = require('gulp');
-const runTasksSequentially = require('gulp-sequence');
 
 // const chalk = require('chalk');
 
@@ -150,20 +149,26 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		usedOptionsOfCopyingFiles
 	);
 
-	const taskBodyOfDeletingOldCopiesAndThenCopying = (thisTaskIsDone) => {
-		runTasksSequentially(
-			taskNameOfDeletingFilesWithoutPrinting,
-			taskNameOfCopyingFiles
-		)(thisTaskIsDone);
-	};
 
-	const actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
+
+	// VERY, VERY UGLY IMPEMENTATION BELOW.
+	// To be improved in the future.
+	const taskBodyOfDeletingOldCopiesAndThenCopying = (thisActionIsDone) => {
 		taskBodyOfDeletingFilesWithoutPrinting(() => {
 			taskBodyOfCopyingFiles(
 				thisActionIsDone
 			);
 		});
 	};
+	// const taskBodyOfDeletingOldCopiesAndThenCopying = (thisTaskIsDone) => {
+	// 	runTasksSequentially(
+	// 		taskNameOfDeletingFilesWithoutPrinting,
+	// 		taskNameOfCopyingFiles
+	// 	)(thisTaskIsDone);
+	// };
+
+
+	const actionToTakeOnSourceFilesChange = taskBodyOfDeletingOldCopiesAndThenCopying;
 
 
 
