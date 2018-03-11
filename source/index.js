@@ -12,7 +12,7 @@ module.exports = {
 		},
 	},
 	utils: {
-		forAGlobArrayExcludeGlobsInPipelines: require('./utils/exclude-globs-of-pipelines-out-of-some-glob-array'),
+		globOperations: require('./utils/modify-globs-according-to-some-pipelines'),
 		printCompletionOfOneTask: require('./utils/print-one-task-done'),
 	},
 };

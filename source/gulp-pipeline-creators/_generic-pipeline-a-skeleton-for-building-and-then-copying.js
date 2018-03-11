@@ -253,10 +253,29 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 			taskNameOfBuildingAndThenCopyingBuiltOutputFiles,
 			taskBodyOfBuildingAndThenCopyingBuiltOutputFiles
 		);
+	}
 
-		actionToTakeOnSourceFilesChange = taskBodyOfBuildingAndThenCopyingBuiltOutputFiles;
+
+
+
+	if (shouldCopyBuiltFileToElsewhere) {
+		actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
+			taskBodyOfDeletingFilesWithoutPrinting(() => {
+				taskBodyOfBuilding(() => {
+					taskBodyOfCopyingFiles(
+						thisActionIsDone
+					);
+				});
+			});
+		};
 	} else {
-		actionToTakeOnSourceFilesChange = taskBodyOfDeletingOldOutputFilesAndThenBuilding;
+		actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
+			taskBodyOfDeletingFilesWithoutPrinting(() => {
+				taskBodyOfBuilding(
+					thisActionIsDone
+				);
+			});
+		};
 	}
 
 
@@ -292,8 +311,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	if (shouldCopyBuiltFileToElsewhere) {
 		pipelineSettings.resolvedPathsOfGlobsToCopyAfterEachBuild = resolvedPathsOfGlobsToCopyAfterEachBuild;
 		pipelineSettings.resolvedPathsOfCopiesOfBuiltGlobs        = resolvedPathsOfCopiesOfBuiltGlobs;
-		pipelineSettings.taskNameOfBuildingAndThenCopying         = taskNameOfBuildingAndThenCopyingBuiltOutputFiles,
-		pipelineSettings.toBuildAndThenCopy                       = taskBodyOfBuildingAndThenCopyingBuiltOutputFiles;
+		pipelineSettings.taskNameOfBuildingAndThenCopying         = taskNameOfBuildingAndThenCopyingBuiltOutputFiles;
 	}
 
 

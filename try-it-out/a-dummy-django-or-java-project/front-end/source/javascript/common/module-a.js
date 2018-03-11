@@ -1,3 +1,3 @@
 function A() {
-	console.log('Module A loaded');
+	console.log('Module A has been loaded.');
 }

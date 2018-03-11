@@ -157,7 +157,13 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		)(thisTaskIsDone);
 	};
 
-	const actionToTakeOnSourceFilesChange = taskBodyOfDeletingOldCopiesAndThenCopying;
+	const actionToTakeOnSourceFilesChange = (thisActionIsDone) => {
+		taskBodyOfDeletingFilesWithoutPrinting(() => {
+			taskBodyOfCopyingFiles(
+				thisActionIsDone
+			);
+		});
+	};
 
 
 

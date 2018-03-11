@@ -19,7 +19,12 @@ const {
 
 
 const gulp3CommonPipelines = require(npmProjectRootPath);
-const printInfoAboutTheCompletionOfTask                  = gulp3CommonPipelines.utils.printCompletionOfOneTask;
+
+const {
+	printCompletionOfOneTask,
+	globOperations,
+} = gulp3CommonPipelines.utils;
+
 const buildACSSStylusBuildingPipelineForOneAppOrOnePage  = gulp3CommonPipelines.specificPipelines.css.stylusCompilation;
 const buildAJavascriptBuildingPipelineForOneAppOrOnePage = gulp3CommonPipelines.specificPipelines.js.concat;
 const buildAPipelineForCopyingSomeFiles                  = gulp3CommonPipelines.genericPipelines.copyFiles;
@@ -144,11 +149,11 @@ const allJavascriptBuildingPipelines = [
 
 
 
-gulp3CommonPipelines.utils.forAGlobArrayExcludeGlobsInPipelines({
-	globArrayToExcludeThingsOutOf: allGlobsToDeleteBeforeEachBuild,
-	globsPropertyNameOfAPipelineSettings: 'resolvedPathsOfBuiltGlobs',
+globOperations.forAGivenGlobArray.appendCertainGlobsInSomePipelines({
+	globArrayToAppendThingsTo:    allGlobsToDeleteBeforeEachBuild,
+	globsPropertyNameOfAPipeline: 'resolvedPathsOfBuiltGlobs',
 
-	pipelineSettingsArray: [
+	pipelines: [
 		...allCSSBuildingPipelines,
 		...allJavascriptBuildingPipelines,
 	],
@@ -246,7 +251,7 @@ const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCo
 
 gulp.task('delete generated files: everything', (thisTaskIsDone) => {
 	deleteFilesSync(allGlobsToDeleteBeforeEachBuild, { force: true });
-	printInfoAboutTheCompletionOfTask('delete generated files: everything', false);
+	printCompletionOfOneTask('delete generated files: everything', false);
 	thisTaskIsDone();
 });
 
@@ -282,22 +287,23 @@ gulp.task('build once: everything', [
 * ****************************************
 */
 
-const shouldTakeActionOnWatcherCreation = false;
 const scopedWatchingSettings = {};
 
-forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(
-	scopedWatchingSettings,
+forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
+	scopedWatchingSettingsToModify: scopedWatchingSettings,
 
-	frontEndTestSitePipeline_javaTemplates,
-	frontEndTestSitePipeline_djangoTemplates,
-	frontEndTestSitePipeline_staticFiles_media,
-	frontEndTestSitePipeline_staticFiles_iconfonts,
-	frontEndTestSitePipeline_staticFiles_otherCSS,
-	frontEndTestSitePipeline_staticFiles_otherJavascript,
+	involvedPipelines: [
+		frontEndTestSitePipeline_javaTemplates,
+		frontEndTestSitePipeline_djangoTemplates,
+		frontEndTestSitePipeline_staticFiles_media,
+		frontEndTestSitePipeline_staticFiles_iconfonts,
+		frontEndTestSitePipeline_staticFiles_otherCSS,
+		frontEndTestSitePipeline_staticFiles_otherJavascript,
 
-	...allCSSBuildingPipelines,
-	...allJavascriptBuildingPipelines
-);
+		...allCSSBuildingPipelines,
+		...allJavascriptBuildingPipelines,
+	],
+});
 
 
 gulp.task('build and then watch: everything', (thisTaskIsDone) => {
@@ -324,8 +330,8 @@ gulp.task('build and then watch: everything', (thisTaskIsDone) => {
 */
 
 gulp.task('clean',      [ 'delete generated files: everything' ]); // Simply give it a shorter name.
-gulp.task('build-once', [ 'build once: everything' ]);            // Simply give it a shorter name.
-gulp.task('default',    [ 'build and then watch: everything' ]); // The *default* gulp task
+gulp.task('build-once', [ 'build once: everything' ]);             // Simply give it a shorter name.
+gulp.task('default',    [ 'build and then watch: everything' ]);   // The *default* gulp task
 
 /*
 *
@@ -339,24 +345,29 @@ gulp.task('default',    [ 'build and then watch: everything' ]); // The *default
 * ****************************************
 */
 
-function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings(scopedWatchingSettings, ...piplineSettingsArray) {
-	piplineSettingsArray.forEach(pipelineSettings => {
-		const scopeName = pipelineSettings.pipelineFullName;
+function forAScopedWatchingSettings_addMoreScopesViaPipelineSetings({
+	scopedWatchingSettingsToModify,
+	involvedPipelines = [],
+}) {
+	involvedPipelines.forEach(pipeline => {
+		const scopeName = pipeline.pipelineFullName;
 
-		scopedWatchingSettings[scopeName] = {
-			globsToWatch: pipelineSettings.watchingGlobsRelativeToWatchingBasePath,
-			actionToTake: pipelineSettings.actionToTakeOnSourceFilesChange,
-			shouldTakeActionOnWatcherCreation,
+		const newWatchingScope = {
+			globsToWatch: pipeline.watchingGlobsRelativeToWatchingBasePath,
+			actionToTake: pipeline.actionToTakeOnSourceFilesChange,
+			shouldTakeActionOnWatcherCreation: true,
 		};
 
-		const pipelineWatchingBasePath = pipelineSettings.watchingBasePath;
-		if (pipelineWatchingBasePath && typeof pipelineWatchingBasePath === 'string') {
-			scopedWatchingSettings[scopeName].watchingBasePath = pipelineWatchingBasePath;
+		const { watchingBasePath } = pipeline;
+		if (watchingBasePath && typeof watchingBasePath === 'string') {
+			newWatchingScope.watchingBasePath = watchingBasePath;
 		}
 
-		const pipelineLoggingBasePath = pipelineSettings.basePathForShorteningPathsInLog;
-		if (pipelineLoggingBasePath && typeof pipelineLoggingBasePath === 'string') {
-			scopedWatchingSettings[scopeName].basePathForShorteningPathsInLog = pipelineLoggingBasePath;
+		const loggingBasePath = pipeline.basePathForShorteningPathsInLog;
+		if (loggingBasePath && typeof loggingBasePath === 'string') {
+			newWatchingScope.basePathForShorteningPathsInLog = loggingBasePath;
 		}
+
+		scopedWatchingSettingsToModify[scopeName] = newWatchingScope;
 	});
 }

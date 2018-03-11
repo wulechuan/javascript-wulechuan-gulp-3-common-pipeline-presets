@@ -9,7 +9,16 @@
 <body>
     <article>
         <h1>This is a page that is hopefully hosted by a Java server.</h1>
-        <p>我是南昌吴乐川。</p>
+        <dl>
+            <div class="info-block">
+                <dt>作者</dt>
+                <dd>南昌吴乐川</dd>
+            </div>
+            <div class="info-block">
+                <dt>电子邮件</dt>
+                <dd><a href="mailto:wulechuan@live.com"></a></dd>
+            </div>
+        </dl>
     </article>
 </body>
 </html>
