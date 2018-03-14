@@ -5,7 +5,9 @@
 
 <dl>
 <dt>Package Name</dt>
-<dd>[@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)</dd>
+<dd>
+[@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)
+</dd>
 <dt>Author</dt>
 <dd>南昌吴乐川</dd>
 </dl>
