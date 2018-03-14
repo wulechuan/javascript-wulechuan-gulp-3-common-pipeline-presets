@@ -98,7 +98,7 @@ const allGlobsToDeleteBeforeEachBuild = [
 
 const allCSSBuildingPipelines = [
 	buildACSSStylusBuildingPipelineForOneAppOrOnePage({
-		taskNameKeyPart: 'App',
+		taskNameKeyPart: 'The entire app',
 		// basePathForShorteningPathsInLog: projectRootPath,
 		sourceBasePath: frontEndSourceCSSPath,
 		// watchingBasePath,
@@ -165,8 +165,7 @@ globOperations.forAGivenGlobArray.appendCertainGlobsInSomePipelines({
 
 
 const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Java Templates',
-	taskNameKeyPart: 'HTML (.vm)',
+	taskNameKeyPart: 'Java Templates HTML (.vm)',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
 	globsToCopyRelativeToSoureBasePath: [ '**/*.vm' ],
 	// globsToExclude: [],
@@ -175,8 +174,7 @@ const frontEndTestSitePipeline_javaTemplates = buildAPipelineForCopyingSomeFiles
 });
 
 const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Django Templates',
-	taskNameKeyPart: 'HTML',
+	taskNameKeyPart: 'Django Templates HTML',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
 	globsToCopyRelativeToSoureBasePath: [ '**/*.html' ],
 	// globsToExclude: [],
@@ -185,8 +183,7 @@ const frontEndTestSitePipeline_djangoTemplates = buildAPipelineForCopyingSomeFil
 });
 
 const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Static Files',
-	taskNameKeyPart: 'media',
+	taskNameKeyPart: 'Static files: media',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'images'),
 	// globsToCopyRelativeToSoureBasePath: [ '**/*' ],
 	// globsToExclude: [],
@@ -195,8 +192,7 @@ const frontEndTestSitePipeline_staticFiles_media = buildAPipelineForCopyingSomeF
 });
 
 const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Static Files',
-	taskNameKeyPart: 'iconfonts',
+	taskNameKeyPart: 'Static files: iconfonts',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'fonts'),
 	globsToCopyRelativeToSoureBasePath: [ '**/iconfont*.*' ],
 	// globsToExclude: [],
@@ -205,8 +201,7 @@ const frontEndTestSitePipeline_staticFiles_iconfonts = buildAPipelineForCopyingS
 });
 
 const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Static Files',
-	taskNameKeyPart: 'css',
+	taskNameKeyPart: 'Static files: css',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'css'),
 	globsToCopyRelativeToSoureBasePath: [ '**/*.css' ],
 	globsToExclude: [
@@ -222,8 +217,7 @@ const frontEndTestSitePipeline_staticFiles_otherCSS = buildAPipelineForCopyingSo
 });
 
 const frontEndTestSitePipeline_staticFiles_otherJavascript = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Static Files',
-	taskNameKeyPart: 'javascript',
+	taskNameKeyPart: 'Static files: javascript',
 	sourceBasePath: joinPath(javaOrDjangoStaticFilesPath, 'js'),
 	globsToCopyRelativeToSoureBasePath: [ '**/*.js' ],
 	globsToExclude: [

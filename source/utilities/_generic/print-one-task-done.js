@@ -15,7 +15,7 @@ function formatTimestamp(timestamp) {
 }
 
 
-module.exports = function printInfoAboutTheCompletionOfATask(taskDescription = 'Unspecified Task', errorOccured) {
+module.exports = function printCompletionOfOneTask(taskDescription = 'Unspecified Task', errorOccured) {
 	errorOccured = !!errorOccured;
 	const symbol     = errorOccured ? ' ╳ '               : ' ♥ ';
 	const conclusion = errorOccured ? ' DONE with ERROR ' : ' DONE ';

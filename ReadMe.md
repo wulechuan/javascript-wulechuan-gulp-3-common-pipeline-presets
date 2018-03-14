@@ -3,9 +3,12 @@
 
 # NPM Page
 
-Package Name: [@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)
-
-Author: 南昌吴乐川
+<dl>
+<dt>Package Name</dt>
+<dd>[@wulechuan/gulp-3-common-pipeline-presets](https://www.npmjs.com/package/@wulechuan/gulp-3-common-pipeline-presets)</dd>
+<dt>Author</dt>
+<dd>南昌吴乐川</dd>
+</dl>
 
 <br/>
 <br/>
@@ -34,7 +37,7 @@ See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
 See the `gulpfile.js` included by this repository as an example.
 
-Below are some snippets from the said `gulpfile.js`.
+Below are some snippets of the said `gulpfile.js`.
 
 ### To create a pipeline for copying some files
 ```javascript
@@ -42,13 +45,11 @@ const gulp3CommonPipelines = require('@wulechuan/gulp-3-common-pipeline-presets'
 const buildAPipelineForCopyingSomeFiles = gulp3CommonPipelines.genericPipelines.copyFiles;
 
 const frontEndTestSitePipelineForCopyingJavaTemplates = buildAPipelineForCopyingSomeFiles({
-	pipelineCategory: 'Java Templates',
-	taskNameKeyPart: 'HTML (.vm)',
+	taskNameKeyPart: 'Java Templates (*.vm)',
 	sourceBasePath: javaOrDjangoPageTemplatesPath,
 	globsToCopyRelativeToSoureBasePath: [ '**/*.vm' ],
 	// globsToExclude: [],
 	outputBasePathOfCopying: frontEndTestSiteHTMLPath,
-	// optionsOfCopyingFiles: null,
 });
 ```
 

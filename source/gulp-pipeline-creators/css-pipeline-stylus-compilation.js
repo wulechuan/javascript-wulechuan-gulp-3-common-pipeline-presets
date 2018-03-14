@@ -46,7 +46,7 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 	];
 
 	function toCreateStylusCompilationTaskBody({
-		// taskNameKeyPart,
+		taskNameForLogs,
 		entryGlobsForBuilding,
 		outputBasePathOfBuilding,
 		basePathForShorteningPathsInLog,
@@ -54,6 +54,7 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 		return createTaskBodyForCompilingStylus(
 			entryGlobsForBuilding,
 			{
+				taskNameForLogs,
 				compiledCSSOutputFolder: outputBasePathOfBuilding,
 				compiledCSSFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
@@ -64,7 +65,7 @@ function buildACSSStylusBuildingPipelineForOneAppOrOnePage({
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: 'CSS: To Compile Stylus',
+		pipelineCategory: 'CSS Stylus pipeline',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 

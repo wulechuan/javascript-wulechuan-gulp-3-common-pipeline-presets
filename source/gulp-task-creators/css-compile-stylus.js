@@ -3,11 +3,12 @@ const renameFile = require('gulp-rename');
 const compileStylus = require('gulp-stylus');
 const pump = require('pump');
 
-const printInfoAboutTheCompletionOfTask = require('../utilities/_generic/print-one-task-done');
+const printCompletionOfOneTask  = require('../utilities/_generic/print-one-task-done');
 const printGulpErrorBeautifully = require('@wulechuan/javascript-gulp-plugin-error-printer');
 
 module.exports = function createTaskForCompilingStylusGlobs(entryStylusGlobs, options) {
 	const {
+		taskNameForLogs = '',
 		compiledCSSOutputFolder,
 		compiledCSSFileBaseName,
 		basePathForShorteningPathsInLog,
@@ -44,7 +45,7 @@ module.exports = function createTaskForCompilingStylusGlobs(entryStylusGlobs, op
 				printGulpErrorBeautifully(error, basePathForShorteningPathsInLog);
 			}
 
-			printInfoAboutTheCompletionOfTask('Compiling Stylus into CSS', !!error);
+			printCompletionOfOneTask(`${taskNameForLogs}: compilation`, !!error);
 			thisTaskDoneCallback();
 		});
 	};

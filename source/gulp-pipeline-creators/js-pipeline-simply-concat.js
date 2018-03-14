@@ -46,7 +46,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 	];
 
 	function toSimplyConcatJavascriptFiles({
-		taskNameKeyPart,
+		taskNameForLogs,
 		entryGlobsForBuilding,
 		outputBasePathOfBuilding,
 		basePathForShorteningPathsInLog,
@@ -54,7 +54,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 		return createTaskBodyForConcatenatingJavascriptFiles(
 			entryGlobsForBuilding,
 			{
-				taskNameForLogs: taskNameKeyPart,
+				taskNameForLogs,
 				compiledJavascriptOutputFolder: outputBasePathOfBuilding,
 				compiledJavascriptFileBaseName: builtSingleFileBaseName,
 				basePathForShorteningPathsInLog,
@@ -65,7 +65,7 @@ function buildAJavascriptBuildingPipelineForOneAppOrOnePage({
 
 	return buildAPipelineForBuildingOneAppOrOnePage({
 		// logging
-		pipelineCategory: 'Javascript: To Concatenate',
+		pipelineCategory: 'JS concat. pipeline',
 		taskNameKeyPart,
 		basePathForShorteningPathsInLog,
 
