@@ -179,8 +179,8 @@ So there are 3 functions involved:
 -   arguments[1]: `outputFolderPath` : `String`
 	**Required**.
 
--   arguments[2]: `options` : `object|null`
-    **Optional**
+-   arguments[2]: `options` : `object` or `null`
+    **Optional**.
 
 	```javascript
 	let options = {
@@ -218,7 +218,7 @@ So there are 3 functions involved:
 
 	All `.styl` files that are treated as compilation entries.
 
--   arguments[1]: `options` : `Object|null`
+-   arguments[1]: `options` : `Object`
     **Required**.
 
 	```javascript
