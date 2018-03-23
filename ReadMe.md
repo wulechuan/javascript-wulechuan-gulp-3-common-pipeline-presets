@@ -1,7 +1,12 @@
+____
+
 # _This ReadMe file is still under construction_
 
+____
 
-# NPM Page
+Stay tuned.
+
+# NPM Package
 
 <dl>
 <dt>Package Name</dt>
@@ -14,17 +19,11 @@
 <dd>南昌吴乐川</dd>
 </dl>
 
-<br/>
-<br/>
-<br/>
-<br/>
 
 # Introduction
 
 This is a collection of pipeline presets for [gulp](https://gulpjs.com/).
 
-<br/>
-<br/>
 
 # Usage
 
@@ -35,7 +34,7 @@ before they decide to use them elsewhere.
 
 See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
 
-<br/>
+
 
 ## Example Codes
 
@@ -57,7 +56,7 @@ const frontEndTestSitePipelineForCopyingJavaTemplates = buildAPipelineForCopying
 });
 ```
 
-<br/>
+
 
 ### To create multiple pipelines for concatenation of some javascript source files
 
@@ -103,8 +102,7 @@ const allJavascriptBuildingPipelines = [
 ];
 ```
 
-<br/>
-<br/>
+
 
 ## Try It Out, See It in Action
 
@@ -142,10 +140,6 @@ npm start
 ```
 That's it.
 
-<br/>
-<br/>
-<br/>
-<br/>
 
 
 ### A Snapshos of Mine
@@ -157,7 +151,5 @@ running an Ubuntu instance.
 
 ![Just started](./docs/illustrates/console-snapshot-001.png "After some random changes")
 
-<br/>
-<br/>
-<br/>
-<br/>
+
+<link rel="stylesheet" href="./docs/styles/markdown-styles-for-vscode-built-in-preview.min.css">
