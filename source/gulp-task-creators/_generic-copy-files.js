@@ -4,30 +4,32 @@ const renameFiles = require('gulp-rename');
 const pump = require('pump');
 const chalk = require('chalk');
 
-module.exports = function createTaskForCopyingFiles(sourceGlobs, outputPath, options = {}) {
+module.exports = function createTaskForCopyingFiles(sourceGlobsToCopy, outputFolderPath, options = {}) {
 	const {
-		shouldFlattenSubFolders = false,
-		outputFileTypeWithDot = null,
 		logPrefix = 'Unspeficied task',
 		descriptionOfAssetsToCopy = '',
-		shouldNotLogDetails = false,
 		shouldListSourceFiles = true,
+		shouldNotLogDetails = false,
+
+		shouldFlattenSubFolders = false,
+		outputFileTypeWithDot = null,
+		forSingleInputFileChangeOuputFileBaseNameInto = '',
 	} = options;
 
 
 	return function taskBody(thisTaskDone) {
+		const resolvedFileList = globs.sync(sourceGlobsToCopy);
+
 		if (!shouldNotLogDetails) {
 			let descriptionOrDetailedList;
 
 			if (shouldListSourceFiles) {
-
-				const resolvedFileList = globs.sync(sourceGlobs);
 				const resolvedFileListString = resolvedFileList.length > 0 ?
 					JSON.stringify(resolvedFileList, null, 4).slice(2, -2) :
 					`    ${chalk.red('<nothing>')}`;
 
 				descriptionOrDetailedList = `copying globs:\n${
-					chalk.blue(JSON.stringify(sourceGlobs, null, 4).slice(2, -2).replace(/\\\\/g, '/'))
+					chalk.blue(JSON.stringify(sourceGlobsToCopy, null, 4).slice(2, -2).replace(/\\\\/g, '/'))
 				}\nwhich resolved to:\n${
 					resolvedFileListString
 				}`;
@@ -46,31 +48,37 @@ module.exports = function createTaskForCopyingFiles(sourceGlobs, outputPath, opt
 			}\n${
 				descriptionOrDetailedList
 			}\ninto:\n    ${
-				chalk.green(outputPath)
+				chalk.green(outputFolderPath)
 			}`);
 		}
 
 		const stepsToTake = [];
 
-		stepsToTake.push(gulp.src(sourceGlobs));
+		stepsToTake.push(gulp.src(sourceGlobsToCopy));
 
+		let shouldRenameOutputFiles = false;
+		const renamingConfig = {};
 
-		if (shouldFlattenSubFolders || outputFileTypeWithDot) {
-			const renamingConfig = {};
+		if (resolvedFileList.length === 1 && forSingleInputFileChangeOuputFileBaseNameInto) {
+			shouldRenameOutputFiles = true;
+			renamingConfig.basename = forSingleInputFileChangeOuputFileBaseNameInto;
+		}
 
-			if (outputFileTypeWithDot) {
-				renamingConfig.extname = outputFileTypeWithDot;
-			}
+		if (outputFileTypeWithDot) {
+			shouldRenameOutputFiles = true;
+			renamingConfig.extname = outputFileTypeWithDot;
+		}
 
-			if (shouldFlattenSubFolders) {
-				renamingConfig.dirname = '';
-			}
+		if (shouldFlattenSubFolders) {
+			shouldRenameOutputFiles = true;
+			renamingConfig.dirname = '';
+		}
 
+		if (shouldRenameOutputFiles) {
 			stepsToTake.push(renameFiles(renamingConfig));
 		}
 
-
-		stepsToTake.push(gulp.dest(outputPath));
+		stepsToTake.push(gulp.dest(outputFolderPath));
 
 		return pump(stepsToTake, thisTaskDone);
 	};

@@ -53,7 +53,7 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	// copying
 	shouldCopyBuiltFileToElsewhere = false,
 	outputBasePathOfCopying, // e.g. 'build/tryout-website/assets'
-	optionsOfCopyingFiles,   // will be passed to **createTaskForCopyingFiles**
+	optionsOfCopyingFiles,   // will be passed to `createTaskForCopyingFiles`
 }) {
 	if (! buildingEntryGlobsRelativeToSourceBasePath) {
 		if (watchingBasePath || watchingGlobsRelativeToWatchingBasePath) {
