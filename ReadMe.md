@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="./node_modules/@wulechuan/css-stylus-markdown-themes/dist/default.css">
+
 # NPM Package
 
 <dl>
@@ -567,28 +569,77 @@ so that we can customize the pipeline object to create and `return`.
 
 ```javascript
 const pipeline = {
+	/* logging */
+	pipelineFullName,
 
+
+	/* globs of pipeline */
+	resolvedPathsOfGlobsToCopy,
+	resolvedPathsOfGlobsToDeleteBeforeCopyingAgain,
+
+
+	/* globs for watching */
+	watchingBasePath,
+	watchingGlobsRelativeToWatchingBasePath,
+
+
+	/* task names */
+	taskNameOfMainTask,
+	taskNameOfDeletingFiles,
+	taskNameOfCopyingFiles,
+
+
+	/* task bodies */
+	toClean,
+	toCopy,
+
+
+	/* Obviously this is the action
+	 * to trigger on watched changes. */
+	actionToTakeOnSourceFilesChange,
 };
 ```
 
 
-### The CSS Stylus Compilation Pipeline Object
+### The CSS Stylus Compilation Pipeline Object and The Javascript Concatenation Pipeline Object
 
 ```javascript
 const pipeline = {
+	/* logging */
+	pipelineFullName,
 
+
+	/* globs of pipeline */
+	resolvedPathsOfEntryGlobsForBuilding,
+	resolvedPathsOfBuiltGlobs,
+	resolvedPathsOfGlobsToDeleteBeforeEachBuild,
+
+
+	/* globs for watching */
+	watchingBasePath,
+	watchingGlobsRelativeToWatchingBasePath,
+
+
+	/* task names */
+	taskNameOfMainTask,
+	taskNameOfDeletingFiles,
+	taskNameOfBuilding: taskNameOfDeletingOldOutputFilesAndThenBuilding,
+
+
+	/* task bodies */
+	toClean: taskBodyOfDeletingFiles,
+	toBuild: taskBodyOfDeletingOldOutputFilesAndThenBuilding,
+
+
+	/* Obviously this is the action
+	 * to trigger on watched changes. */
+	actionToTakeOnSourceFilesChange,
+
+
+	/* These properties are available
+	 * if and only if copying file task is allowed. */
+	resolvedPathsOfGlobsToCopyAfterEachBuild,
+	resolvedPathsOfCopiesOfBuiltGlobs,
+	taskNameOfBuildingAndThenCopying,
 };
 ```
-
-
-### The Javascript Concatenation Pipeline Object
-
-```javascript
-const pipeline = {
-
-};
-```
-
-
-
-<link rel="stylesheet" href="./docs/styles/markdown-styles-for-vscode-built-in-preview.min.css">
