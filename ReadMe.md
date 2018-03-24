@@ -349,7 +349,7 @@ A usable pipeline should:
     all files that might affect
 	the final output of the pipeline,
 	so that we might utilizing some
-	file watching machanism to watch
+	file watching mechanism to watch
 	all these files, and automatically
 	re-run the pipeline whenever
 	a change happens.
@@ -406,7 +406,7 @@ For an example pipeline object,
 see below [Some Pipeline Objects](#some-pipeline-objects).
 ## Watching Files for Pipelines
 
-Watching machanism is prepared
+Watching mechanism is prepared
 but **not** set up for a pipeline.
 This means a pipeline object carries
 enought information for setting a watcher
@@ -416,7 +416,7 @@ later, **manually**.
 > of these information matches another
 > npm package of mine, [@wulechuan/scoped-glob-watchers](https://www.npmjs.com/package/@wulechuan/scoped-glob-watchers).
 > But theoretically, since the infomation is complete,
-> any watching machanism will work,
+> any watching mechanism will work,
 > as long as an interface mapper is provided.
 
 
