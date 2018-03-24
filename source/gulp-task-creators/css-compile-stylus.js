@@ -42,7 +42,9 @@ module.exports = function createTaskForCompilingStylusGlobs(entryStylusGlobs, op
 
 		pump(taskSteps, (error) => {
 			if (error) {
-				printGulpErrorBeautifully(error, basePathForShorteningPathsInLog);
+				printGulpErrorBeautifully(error, {
+					basePathForShorteningPathsInLog,
+				});
 			}
 
 			printCompletionOfOneTask(`${taskNameForLogs}: compilation`, !!error);

@@ -33,7 +33,9 @@ module.exports = function createTaskBodyForCompilingJS(sourceGlobsOfJavascript, 
 
 		pump(taskSteps, (error) => {
 			if (error) {
-				printGulpUglifyJsErrorBeautifully(error, basePathForShorteningPathsInLog);
+				printGulpUglifyJsErrorBeautifully(error, {
+					basePathForShorteningPathsInLog,
+				});
 			}
 
 			printCompletionOfOneTask(`${taskNameForLogs}: concatenation`, !!error);

@@ -1,6 +1,6 @@
 {
   "name": "@wulechuan/gulp-3-common-pipeline-presets",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "A collection of pipeline presets for glup 3.9.x.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
@@ -32,7 +32,7 @@
     "clean": "npm run gulp clean"
   },
   "dependencies": {
-    "@wulechuan/javascript-gulp-plugin-error-printer": "~0.0.7",
+    "@wulechuan/javascript-gulp-plugin-error-printer": "^1.0.0",
     "@wulechuan/scoped-glob-watchers": "^0.2.5",
     "chalk": "^2.3.1",
     "globs": "^0.1.3",
