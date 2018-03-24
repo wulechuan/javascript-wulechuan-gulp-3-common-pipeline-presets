@@ -26,7 +26,7 @@ to run a tryout project as a demostration.
 So people can try these presets right here inside this repository
 before they decide to use them elsewhere.
 
-See below [Try It Out, See It in Action](#try-it-out-see-it-in-action).
+See below [Try It out, See It in Action](#try-it-out-see-it-in-action).
 
 
 
@@ -98,7 +98,7 @@ const allJavascriptBuildingPipelines = [
 
 
 
-## Try It Out, See It in Action
+## Try It out, See It in Action
 
 There is a dummy project included within this repository,
 so that people can try this watchers controller without difficulty.
@@ -149,29 +149,49 @@ running an Ubuntu instance.
 
 # API
 
-## Task Concept
+## Concepts of Task and Task Creator
 
-A **task** is created by a **task creator function**.
-So, all you can making use of are `Function`s.
+A **task** is represented by nothing else but a function,
+calls the **task body**.
 
-You call a creator function, you get a task,
-More specifically, you get another function, which is the task body.
+A task, aka a task body function, is created by another function,
+the **task creator function**.
+So, all you are making use of are `Function`s.
+You call a creator function, you get a task body function.
 
-### Task Body
+A task body, being a function, takes a single `argument`,
+holding a **callback function**.
+Whenever the task comes to an end, we call the callback function
+**inside of** the task body function, thus we tell the outside world
+of the task body that the task is now finished.
 
-A task body is a function, taking a single argument as a callback function.
-
-A task body function is usually created by another function, aka the creator.
-Thus we have the opportunity to customize the task.
+Note that usually we utilize the creator function
+to create the task body function.
+This way we have the opportunity to customize the task.
 Otherwise we might only be able to create identical task bodies,
 which doesn't make sense.
 
-So there are 3 functions involved:
+In summary, there are 3 functions involved:
 1. The function to create the task body;
 2. The function being the task body;
 3. The function as the argument of the task body.
 
-## Task Creators List
+The example below might help you understand these concepts.
+```javascript
+const aTaskBody = function aTaskCreator(customizationsForATask) {
+	/* We might make some use of the `customizationsForATask` here. */
+
+	return function theTaskBody(theCallbackFunction) {
+		/* Do the job here,
+		 * might also make some more use of the `customizationsForATask`. */
+		
+		/* Tell the outside world that this task is finished. */
+		theCallbackFunction();
+	};
+};
+```
+
+## Available Task Creators List
 
 ### Copying-files Task Creator
 
@@ -268,27 +288,89 @@ So there are 3 functions involved:
 A **pipeline** is basically a set of
 tasks that are connected to each other,
 and work as one union piece in most cases.
+But technically, those tasks **might**
+be used individually.
 
-An implementation of a pipeline is
-nothing more than a regular object literal,
-that holding some information,
-and being an interface as a whole.
-So obviously we can also call a pipeline
-a **pipeline object**.
+Since tasks are basically `Function`s,
+while a pipeline is a bunch of tasks
+that are bound together,
+a pipeline can be **run**, just like a task.
 
 Though pipelines are different from each others,
 they do have some common points.
-Any pipeline implementation
+
+A usable pipeline should:
+-   know what's the input,
+    so that an ouput will be generated throught this pipeline
+	upon the said input.
+
+-   know what files will be generated,
+    so that whenever the pipeline runs again,
+	it is able to automatically remove
+	all output files of last run, if any.
+
+	> It's better for a pipeline to also
+	> provide a task body, aka a function,
+	> to specifically remove all those output
+	> files. Or at least provides the task name.
+	>
+	> This helps us building a compound
+	> task over several pipelines, to remove
+	> all output files of all these pieplines
+	> in one go.
+	>
+	> In fact, my pipelines all provide
+	> both the clean task name and the task body.
+	>
+	> I personally insist that a mature
+	> building system should be able to
+	> clean up things on demand, not just
+	> create things out.
+
+-   provide a so-called **main task**,
+    so that whenever we need to run a pipeline,
+	we start from this main task,
+	having the confidence that all
+	other tasks buried inside the pipeline
+	are for sure to run automatically.
+
+	> Besides, it would be better that all pipelines
+	> of different types provide exactly
+	> the same main task interface,
+    > so that we are able to operate several
+	> pipelines in a batch, which hopefully
+	> provides an even better automation.
+	>
+	> For example we can collect all pipelines
+	> in an array, and run all their main tasks
+	> in one go.
+
+-   provide a globs array, covering
+    all files that might affect
+	the final output of the pipeline,
+	so that we might utilizing some
+	file watching machanism to watch
+	all these files, and automatically
+	re-run the pipeline whenever
+	a change happens.
+
+The representation of a pipeline is
+nothing more than a regular object literal,
+holding some information of the pipeline,
+including those common points mentioned above.
+Obviously we can also call a pipeline
+a **pipeline object**.
+
+Any given pipeline object
 always contains these properties:
 
-1.  A descriptive name for logging messages or errors
+1.  `pipelineFullName`  
+    A descriptive name for logging messages or errors
     in the console.
-	This name stores in the `pipelineFullName` property
-	of the pipeline object.
 
-1.  A pair of properties together build up
-    those globs for watching: the `watchingBasePath`,
-	and the `watchingGlobsRelativeToWatchingBasePath`.
+1.  `watchingBasePath` and `watchingGlobsRelativeToWatchingBasePath`  
+    A pair of properties together build up
+    those globs for watching.
 
 	> It's worth to point out that
 	> the globs for watching is often
@@ -299,30 +381,37 @@ always contains these properties:
 	> so that any change of any file among those are watched,
 	> a new compilation should trigger.
 
-1.  A task body function named `actionToTakeOnSourceFilesChange`,
-	used as the action to trigger whenever a file covered
-	in the globs metioned in (2) changes.
+1.  `actionToTakeOnSourceFilesChange`  
+    The name of the action to trigger
+	whenever a change or several changes happen
+	to those file covered in the globs metioned in (2).
 
 1.  A task for deleting built files metioned in (1).
-    The task name stores in the `taskNameofDeletingFiles` property
-	of the pipeline object.
-	The task body function stores in the `toClean` property
-	of the pipeline object.
 
-1.  A task as the so-called main task.
-	The task name stores in the `taskNameOfMainTask` property
-	of the pipeline object.
+    -   The task name stores in the `taskNameofDeletingFiles` property
+	    of the pipeline object.
 
-	> The task body function also stores in the pipeline object,
+	-   The task body function stores in the `toClean` property
+	    of the pipeline object.
+
+1.  `taskNameOfMainTask`  
+    The name of the so-called main task.
+
+	> The main task's body function
+	> is also stores in the pipeline object,
 	> but in variant property names
 	> across different pipeline types.
 
-> Watching machanism is prepared
-> but **not** set up for a pipeline.
-> This means a pipeline object carries
-> enought information for setting a watcher
-> later, **manually**.
->
+For an example pipeline object,
+see below [Some Pipeline Objects](#some-pipeline-objects).
+## Watching Files for Pipelines
+
+Watching machanism is prepared
+but **not** set up for a pipeline.
+This means a pipeline object carries
+enought information for setting a watcher
+later, **manually**.
+
 > By the way, the naming convention
 > of these information matches another
 > npm package of mine, [@wulechuan/scoped-glob-watchers](https://www.npmjs.com/package/@wulechuan/scoped-glob-watchers).
@@ -330,14 +419,21 @@ always contains these properties:
 > any watching machanism will work,
 > as long as an interface mapper is provided.
 
-## Pipeline Creator
-Since a pipeline is built upon a set of tasks,
-a **pipeline creator** utilizes some **task creators**.
 
-A pipeline creator is a `Function`
-for creating a pipeline object.
-The creator takes some options(usually a single option)
-so that we can customize the pipeline object to create and `return`.
+
+
+## Pipeline Creator Concept
+
+A pipeline, aka a pipeline object, is created
+by a `Function` clled **pipeline creator**.
+
+The creator takes some options(usually a single option, in fact)
+so that we can customize the pipeline object to create.
+It `return`s a pipeline object, instead of constructing
+an object via the `new` operator.
+
+Since a pipeline is built upon a set of tasks,
+a pipeline creator utilizes some **task creators**.
 
 
 
@@ -353,21 +449,21 @@ so that we can customize the pipeline object to create and `return`.
 	let options = {
 		/* logging */
 
-		// e.g. 'Javascript' or '爪哇脚本'
+		/* e.g. 'Javascript' or '爪哇脚本' */
 		pipelineCategory,
 
-		// e.g. 'Page: User Dashboard' or maybe just 'App'
+		/* e.g. 'Page: User Dashboard' or maybe just 'App' */
 		taskNameKeyPart,
 
-		// e.g. 'front-end/source/js' or 'front-end/source',
-		// basically any path you prefer.
+		/* e.g. 'front-end/source/js' or 'front-end/source',
+		 * basically any path you prefer. */
 		basePathForShorteningPathsInLog = '',
 
 
 
 		/* source */
 
-		// e.g. 'front-end/source/js'
+		/* e.g. 'front-end/source/js' */
 		sourceBasePath = process.pwd(),
 
 		// e.g. [ '**/*.js' ]
@@ -385,7 +481,7 @@ so that we can customize the pipeline object to create and `return`.
 		/* e.g. '../static' or 'dist/assets' */
 		outputBasePathOfBuilding,
 
-		// e.g. [ 'app.js' ]
+		/* e.g. [ 'app.js' ] */
 		builtGlobsRelativeToOutputBasePathOfBuilding = [],
 
 		/* A function to create another function,
