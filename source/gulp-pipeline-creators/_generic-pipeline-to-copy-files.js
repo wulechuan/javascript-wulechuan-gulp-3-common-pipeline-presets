@@ -111,9 +111,9 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 			);
 		});
 	} else {
-		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = [
-			...validatedProvidedOutputGlobs,
-		];
+		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = validatedProvidedOutputGlobs.map(
+			glob => joinPath(outputBasePathOfCopying, glob)
+		);
 	}
 
 
