@@ -211,16 +211,16 @@ function buildAPipelineForBuildingOneAppOrOnePage({ // eslint-disable-line max-s
 	let taskBodyOfBuildingAndThenCopyingBuiltOutputFiles;
 
 	if (shouldCopyBuiltFileToElsewhere) {
-		const usedOptionsOfCopyingFiles = {
-			...{
+		const usedOptionsOfCopyingFiles = Object.assign(
+			{
 				shouldFlattenSubFolders: false,
 				logPrefix: taskNameOfCopyingFiles,
 				shouldNotLogDetails: true,
 				shouldListSourceFiles: false,
 			},
 
-			...optionsOfCopyingFiles,
-		};
+			optionsOfCopyingFiles
+		);
 
 		taskBodyOfCopyingFiles = createTaskForCopyingFiles(
 			resolvedPathsOfGlobsToCopyAfterEachBuild,

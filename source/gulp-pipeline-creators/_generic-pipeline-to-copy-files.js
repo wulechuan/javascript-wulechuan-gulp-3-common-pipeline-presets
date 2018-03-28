@@ -130,8 +130,8 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		thisTaskIsDone();
 	};
 
-	const usedOptionsOfCopyingFiles = {
-		...{
+	const usedOptionsOfCopyingFiles = Object.assign(
+		{
 			shouldFlattenSubFolders:   false,
 			logPrefix:                 taskNameOfCopyingFiles,
 			// descriptionOfAssetsToCopy: pipelineFullName,
@@ -139,8 +139,8 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 			shouldListSourceFiles:     false,
 		},
 
-		...optionsOfCopyingFiles,
-	};
+		optionsOfCopyingFiles
+	);
 
 	const taskBodyCoreOfCopyingFiles = createTaskForCopyingFiles(
 		resolvedPathsOfGlobsToCopy,
