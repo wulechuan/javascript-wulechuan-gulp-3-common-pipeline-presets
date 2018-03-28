@@ -118,9 +118,6 @@ See [Readme.md](../ReadMe.md).
 	let options = {
 		/* logging */
 
-		/* e.g. 'Javascript' or '爪哇脚本' */
-		pipelineCategory,
-
 		/* e.g. 'Page: User Dashboard' or maybe just 'App' */
 		taskNameKeyPart,
 
@@ -136,38 +133,33 @@ See [Readme.md](../ReadMe.md).
 		sourceBasePath = process.pwd(),
 
 		// e.g. [ '**/*.js' ]
-		buildingEntryGlobsRelativeToSourceBasePath,
+		globsToCopyRelativeToSoureBasePath,
 
-		watchingBasePath,
+		/* e.g. [ 'd:/projects/something/**.* '],
+		 * An excluded glob can be either an absolute one or a relative one.
+		 * If an excluded glob is a relative one,
+		 * then it's assumed that
+		 * the reference base path is the `sourceBasePath`. */
+		globsToExclude,
 
-		// e.g. [ '**/*.js' ]
-		watchingGlobsRelativeToWatchingBasePath,
 
 
-
-		/* building(concatenation) */
+		/* output */
 
 		/* e.g. '../static' or 'dist/assets' */
-		outputBasePathOfBuilding,
+		outputBasePath,
 
-		/* e.g. [ 'app.js' ] */
-		builtGlobsRelativeToOutputBasePathOfBuilding = [],
-
-		/* A function to create another function,
-		 * the created function will be used
-		 * as the task body of the building process
-		 * upon source globs. */
-		toCreateBuildingTaskBody,
+		/* Optional.
+		 * If the output file set is difficault to determine by computer,
+		 * simply provide them here. 
+		 * For example: it is not so easy to track whether there will be
+		 * only one output file, thus is difficault to tell whether the
+		 * output file(s) are renamed. */
+		globsOfOutputFilesRelativeToOuputBasePath,
 
 
 
 		/* copying */
-
-		/* Obviously the switch */
-		shouldCopyBuiltFileToElsewhere = false,
-
-		/* e.g. 'build/tryout-website/assets' */
-		outputBasePathOfCopying,
 
 		/* This will be directly passed to
 		 * the instance of the copying files task. */
@@ -184,11 +176,13 @@ See [Readme.md](../ReadMe.md).
 	let options = {
 		/* logging */
 
-		/* e.g. 'Javascript' or '爪哇脚本' */
+		/* e.g. 'Javascript' or '爪哇脚本'.
+		 * Basically any non-empty string you prefer. */
 		pipelineCategory,
 
 
-		/* e.g. 'Page: User Dashboard' or maybe just 'App' */
+		/* e.g. 'Page: User Dashboard' or maybe just 'App'
+		 * Basically any non-empty string you prefer. */
 		taskNameKeyPart,
 
 
@@ -333,6 +327,11 @@ See [Readme.md](../ReadMe.md).
 
 
 ## Pipeline Objects
+
+Pipelines, aka pipeline objects are created by pipeline creators.
+So these pipeline objects are `return`ed **outputs**, and should be
+distinguished from those objects as arguments of pipeline creators,
+which obviousely are **inputs** of those creators.
 
 
 ### Pipeline Objects Common APIs

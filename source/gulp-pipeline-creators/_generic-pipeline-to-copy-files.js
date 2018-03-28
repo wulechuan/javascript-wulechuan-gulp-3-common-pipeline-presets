@@ -44,13 +44,22 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 	// the reference base path is the sourceBasePath.
 	globsToExclude,
 
-	// copying
+	// output
 	outputBasePathOfCopying, // e.g. 'build/tryout-website/assets'
+	globsOfOutputFilesRelativeToOuputBasePath, // optional
+
+
+	// copying
 	optionsOfCopyingFiles,   // will be passed to **createTaskForCopyingFiles**
 }) {
 	const validatedRelativeSourceGlobsToCopy = getValidatedGlobsFrom({
 		rawGlobs: globsToCopyRelativeToSoureBasePath,
 		defaultValue: [ '**/*' ],
+	});
+
+	const validatedProvidedOutputGlobs = getValidatedGlobsFrom({
+		rawGlobs: globsOfOutputFilesRelativeToOuputBasePath,
+		defaultValue: null,
 	});
 
 	const excludedGlobsRelativeToSourceBasePath = getValidatedGlobsFrom({
@@ -65,7 +74,7 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 
 	// This globs array below is for watching configuration only.
 	// Note that watching configuration has its own `watchingBasePath`,
-	// thus we need to pass a watcher the relative globs,
+	// thus we need to pass the relative globs to a watcher,
 	// instead of resolved ones.
 	const relativeSourceGlobsToCopyPlusRelativeExcludedGlobs = [
 		...validatedRelativeSourceGlobsToCopy,
@@ -80,21 +89,34 @@ function buildAPipelineForCopyingSomeFiles({ // eslint-disable-line max-statemen
 		glob => joinPath(sourceBasePath, glob)
 	);
 
-	const resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = validatedRelativeSourceGlobsToCopy.map(
-		glob => joinPath(outputBasePathOfCopying, glob)
-	);
 
+
+
+	// Now, let's also exclude some globs out of resolved paths.
 	excludedGlobsRelativeToSourceBasePath.forEach(glob => {
 		resolvedPathsOfGlobsToCopy.push(
 			`!${joinPath(sourceBasePath, glob)}`
 		);
 	});
 
-	excludedGlobsRelativeToSourceBasePath.forEach(glob => {
-		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain.push(
-			`!${joinPath(outputBasePathOfCopying, glob)}`
+	let resolvedPathsOfGlobsToDeleteBeforeCopyingAgain;
+	if (validatedProvidedOutputGlobs.length < 1) {
+		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = validatedRelativeSourceGlobsToCopy.map(
+			glob => joinPath(outputBasePathOfCopying, glob)
 		);
-	});
+
+		excludedGlobsRelativeToSourceBasePath.forEach(glob => {
+			resolvedPathsOfGlobsToDeleteBeforeCopyingAgain.push(
+				`!${joinPath(outputBasePathOfCopying, glob)}`
+			);
+		});
+	} else {
+		resolvedPathsOfGlobsToDeleteBeforeCopyingAgain = [
+			...validatedProvidedOutputGlobs,
+		];
+	}
+
+
 
 
 

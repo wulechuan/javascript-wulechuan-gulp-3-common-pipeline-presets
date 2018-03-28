@@ -17,10 +17,10 @@ module.exports = function createTaskForCopyingFiles(sourceGlobsToCopy, outputFol
 	} = options;
 
 
-	return function taskBody(thisTaskDone) {
+	return function taskBody(thisTaskIsDone) {
 		const resolvedFileList = globs.sync(sourceGlobsToCopy);
 
-		if (!shouldNotLogDetails) {
+		if (! shouldNotLogDetails) {
 			let descriptionOrDetailedList;
 
 			if (shouldListSourceFiles) {
@@ -52,16 +52,28 @@ module.exports = function createTaskForCopyingFiles(sourceGlobsToCopy, outputFol
 			}`);
 		}
 
-		const stepsToTake = [];
 
-		stepsToTake.push(gulp.src(sourceGlobsToCopy));
+
 
 		let shouldRenameOutputFiles = false;
 		const renamingConfig = {};
 
-		if (resolvedFileList.length === 1 && forSingleInputFileChangeOuputFileBaseNameInto) {
-			shouldRenameOutputFiles = true;
-			renamingConfig.basename = forSingleInputFileChangeOuputFileBaseNameInto;
+		if (forSingleInputFileChangeOuputFileBaseNameInto) {
+			if (resolvedFileList.length === 1) {
+
+				shouldRenameOutputFiles = true;
+				renamingConfig.basename = forSingleInputFileChangeOuputFileBaseNameInto;
+
+			} else if (resolvedFileList.length > 1) {
+
+				console.log(`\n${
+					chalk.bgYellow.black(` ${logPrefix} `)
+				}\n\ta file base name for the output file is provided, being "${
+					forSingleInputFileChangeOuputFileBaseNameInto
+				}", while there are more than 1 input files (${
+					resolvedFileList.length
+				} in total) to copy.\nSo the output file base name will NOT be used at all.`);
+			}
 		}
 
 		if (outputFileTypeWithDot) {
@@ -74,12 +86,19 @@ module.exports = function createTaskForCopyingFiles(sourceGlobsToCopy, outputFol
 			renamingConfig.dirname = '';
 		}
 
+
+
+
+		const stepsToTake = [];
+
+		stepsToTake.push(gulp.src(sourceGlobsToCopy));
+
 		if (shouldRenameOutputFiles) {
 			stepsToTake.push(renameFiles(renamingConfig));
 		}
 
 		stepsToTake.push(gulp.dest(outputFolderPath));
 
-		return pump(stepsToTake, thisTaskDone);
+		return pump(stepsToTake, thisTaskIsDone);
 	};
 };

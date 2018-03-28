@@ -1,6 +1,6 @@
 {
   "name": "@wulechuan/gulp-3-common-pipeline-presets",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "A collection of pipeline presets for glup 3.9.x.",
   "author": "wulechuan <wulechuan@live.com>",
   "license": "WTFPL",
